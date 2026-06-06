@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 18mm 22mm 18mm;
+    @bottom-center {
+      content: "ANÚNCIOS QUE VENDEM IMÓVEIS  ·  Método de Marketing de Intenção";
+      font-family: 'Georgia', serif; font-size: 8pt; color: #9a8b6a; letter-spacing: .5px;
+    }
+    @bottom-right { content: counter(page); font-family:'Georgia',serif; font-size:9pt; color:#b08d3a; }
+  }
+  @page :first { margin:0; @bottom-center{content:""} @bottom-right{content:""} }
+
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #2b2620; line-height: 1.62; font-size: 11.2pt;
+    margin: 0;
+  }
+  h1,h2,h3,h4,.sans { font-family: 'Helvetica Neue','Arial',sans-serif; }
+
+  /* ---------- COVER ---------- */
+  .cover {
+    height: 297mm; width:100%; position: relative; color:#f4eee2;
+    background: linear-gradient(180deg, rgba(14,11,8,.55), rgba(14,11,8,.92)),
+                url('img/hero_predio.jpg') center/cover no-repeat;
+    padding: 34mm 22mm; page-break-after: always;
+  }
+  .cover .kicker { font-family:'Helvetica Neue',sans-serif; letter-spacing:4px; font-size:11pt; color:#E0B84C; text-transform:uppercase; }
+  .cover h1 { font-size:43pt; line-height:1.04; margin:14mm 0 6mm; font-weight:800; letter-spacing:-.5px; }
+  .cover h1 span { color:#E0B84C; }
+  .cover .sub { font-size:15pt; color:#e8e1d2; max-width:150mm; font-style:italic; }
+  .cover .badge {
+    position:absolute; bottom:30mm; left:22mm; border-left:3px solid #E0B84C; padding-left:6mm;
+    font-family:'Helvetica Neue',sans-serif; font-size:10.5pt; color:#d8cdb6; line-height:1.7;
+  }
+  .cover .tag { position:absolute; top:30mm; right:22mm; font-family:'Helvetica Neue',sans-serif;
+    font-size:9pt; letter-spacing:2px; color:#c9b88e; border:1px solid #6b5a33; padding:4px 12px; border-radius:20px;}
+
+  /* ---------- STRUCTURE ---------- */
+  .part {
+    page-break-before: always; page-break-after:auto; height:240mm;
+    display:flex; flex-direction:column; justify-content:center;
+    background:#14110E; color:#f4eee2; margin:-20mm -18mm; padding:40mm 24mm;
+  }
+  .part .pnum { font-family:'Helvetica Neue',sans-serif; font-size:13pt; letter-spacing:6px; color:#E0B84C; }
+  .part h2 { font-size:34pt; border:none; margin:6mm 0; color:#fff; line-height:1.1; }
+  .part p { color:#c7bda9; font-size:12.5pt; max-width:150mm; }
+
+  h2.chap {
+    font-size:21pt; color:#1a1712; margin:0 0 1mm; padding-top:1mm; line-height:1.15;
+    page-break-after: avoid;
+  }
+  h2.chap .n { color:#b08d3a; font-weight:800; }
+  .chaptag { font-family:'Helvetica Neue',sans-serif; font-size:9pt; letter-spacing:3px;
+    text-transform:uppercase; color:#b08d3a; page-break-after:avoid; margin-top:2mm;
+    page-break-before: always; }
+  h3 { font-family:'Helvetica Neue',sans-serif; font-size:13.5pt; color:#2b2620; margin:7mm 0 2mm; page-break-after:avoid; }
+  h3::before { content:"▸ "; color:#b08d3a; }
+  p { margin: 0 0 3.2mm; text-align: justify; }
+  .lead { font-size:12.5pt; color:#4a4234; font-style:italic; border-left:3px solid #d8b35a;
+    padding:1mm 0 1mm 6mm; margin:4mm 0 6mm; text-align:left; }
+  strong { color:#1a1712; }
+  em.k { font-style:normal; font-weight:bold; color:#9a6f17; }
+
+  figure { margin:6mm 0; page-break-inside: avoid; text-align:center; }
+  figure img { width:100%; border-radius:6px; }
+  figure.diagram img { box-shadow:0 4px 14px rgba(0,0,0,.18); }
+  figure.photo img { height:62mm; width:100%; object-fit:cover; border-radius:6px; }
+  figure.photo.tall img { height:80mm; }
+  figcaption { font-family:'Helvetica Neue',sans-serif; font-size:8.5pt; color:#8a7d63; margin-top:2mm; font-style:italic; }
+
+  .callout { background:#faf5e9; border:1px solid #e6d29a; border-left:5px solid #d8b35a;
+    border-radius:6px; padding:5mm 6mm; margin:5mm 0; page-break-inside:avoid; }
+  .callout .ct { font-family:'Helvetica Neue',sans-serif; font-weight:700; color:#9a6f17; font-size:10pt;
+    letter-spacing:1px; text-transform:uppercase; margin-bottom:1.5mm; }
+  .callout.dark { background:#14110E; border-color:#3a3026; border-left-color:#E0B84C; color:#ece4d2; }
+  .callout.dark .ct { color:#E0B84C; }
+  .callout.dark strong { color:#fff; }
+
+  .quote { background:#1d1915; color:#f0e9d8; border-radius:8px; padding:6mm 7mm; margin:6mm 0;
+    font-style:italic; font-size:12pt; page-break-inside:avoid; position:relative; }
+  .quote::before { content:"\201C"; font-size:40pt; color:#E0B84C; position:absolute; top:-2mm; left:3mm; opacity:.5;}
+  .quote .src { display:block; font-style:normal; font-family:'Helvetica Neue',sans-serif; font-size:9pt;
+    color:#b9a87e; margin-top:2mm; }
+
+  table { width:100%; border-collapse:collapse; margin:5mm 0; font-size:10pt; page-break-inside:avoid;
+    font-family:'Helvetica Neue',sans-serif; }
+  th { background:#2b2620; color:#f4eee2; text-align:left; padding:2.5mm 3mm; font-size:9.5pt; }
+  td { padding:2.5mm 3mm; border-bottom:1px solid #e7ddc7; vertical-align:top; }
+  tr:nth-child(even) td { background:#faf6ec; }
+
+  ul.clean { list-style:none; padding-left:0; }
+  ul.clean li { padding:1.5mm 0 1.5mm 8mm; position:relative; text-align:left; }
+  ul.clean li::before { content:"✓"; color:#4CB286; font-weight:bold; position:absolute; left:0; }
+  ul.x li::before { content:"✕"; color:#C5524A; }
+  ol.hooks { columns:2; column-gap:8mm; font-family:'Helvetica Neue',sans-serif; font-size:9.3pt;
+    padding-left:5mm; }
+  ol.hooks li { margin-bottom:2mm; break-inside:avoid; line-height:1.35; }
+
+  .script { background:#0f1f17; color:#e3f0e8; border-radius:8px; padding:5mm 6mm; margin:4mm 0;
+    font-family:'Helvetica Neue',sans-serif; font-size:9.6pt; page-break-inside:avoid; }
+  .script .you { color:#7fd3a9; } .script .lead2 { color:#f0cb6e; }
+  .script b { color:#fff; }
+
+  .tocwrap { page-break-after:always; padding-top:6mm; }
+  .toc h2 { font-size:22pt; color:#1a1712; border-bottom:2px solid #d8b35a; padding-bottom:2mm; }
+  .toc .row { display:flex; justify-content:space-between; font-family:'Helvetica Neue',sans-serif;
+    font-size:11pt; padding:2.6mm 0; border-bottom:1px dotted #d9ccaf; }
+  .toc .row b { color:#b08d3a; margin-right:4mm; }
+  .toc .t { color:#2b2620; }
+
+  .grid2 { display:flex; gap:5mm; }
+  .grid2 > div { flex:1; }
+  .num-big { font-family:'Helvetica Neue',sans-serif; font-size:30pt; font-weight:800; color:#e6d29a; line-height:1;}
+</style>
+</head>
+<body>
+
+<!-- ===================== COVER ===================== -->
+<div class="cover">
+  <div class="tag">MÉTODO · MARKETING DE INTENÇÃO</div>
+  <div class="kicker">A apostila completa para corretores</div>
+  <h1>ANÚNCIOS QUE<br>VENDEM <span>IMÓVEIS</span></h1>
+  <div class="sub">Como transformar R$ 30 por dia em comissões de cinco dígitos — atraindo o comprador real e expulsando o curioso, sem virar blogueiro.</div>
+  <div class="badge">
+    O sistema de tráfego para o mercado imobiliário<br>
+    Da mentalidade ao clique no botão · Do zero à primeira venda<br>
+    <span style="color:#E0B84C">Engenharia reversa do método · Edição de campo</span>
+  </div>
+</div>
+
+<!-- ===================== SUMÁRIO ===================== -->
+<div class="tocwrap toc">
+  <h2>O que você vai dominar</h2>
+  <p style="color:#5a5142; font-style:italic; margin-bottom:6mm;">Esta apostila foi escrita como um corretor de altíssimo faturamento ensinaria um pupilo: nada de teoria solta. Cada capítulo é uma peça do mesmo sistema. Leia na ordem.</p>
+
+  <div class="row"><span class="t"><b>PARTE I</b> &nbsp;A mentalidade que muda tudo</span><span></span></div>
+  <div class="row"><span class="t"><b>1.</b> Por que o corretor médio queima dinheiro</span><span>Atenção × Intenção</span></div>
+  <div class="row"><span class="t"><b>2.</b> Dentro da cabeça do algoritmo</span><span>A bola de neve</span></div>
+
+  <div class="row"><span class="t"><b>PARTE II</b> &nbsp;Os três elementos do método</span><span></span></div>
+  <div class="row"><span class="t"><b>3.</b> Elemento 1 — O ICP real (a motivação)</span><span>Quem compra de verdade</span></div>
+  <div class="row"><span class="t"><b>4.</b> Elemento 2 — O imóvel como protagonista</span><span>Tire-se da tela</span></div>
+  <div class="row"><span class="t"><b>5.</b> Elemento 3 — Os elementos qualificativos</span><span>O filtro explícito</span></div>
+
+  <div class="row"><span class="t"><b>PARTE III</b> &nbsp;Mão na massa</span><span></span></div>
+  <div class="row"><span class="t"><b>6.</b> A anatomia do anúncio + 30 ganchos</span><span>Copy que filtra</span></div>
+  <div class="row"><span class="t"><b>7.</b> Os três formatos que mais vendem</span><span>Templates</span></div>
+  <div class="row"><span class="t"><b>8.</b> Meta Ads do zero, sem medo</span><span>Configuração</span></div>
+  <div class="row"><span class="t"><b>9.</b> O atendimento que fecha — script de WhatsApp</span><span>Qualificação</span></div>
+
+  <div class="row"><span class="t"><b>PARTE IV</b> &nbsp;Escala e consistência</span><span></span></div>
+  <div class="row"><span class="t"><b>10.</b> A bola de neve do reinvestimento</span><span>Matemática da escala</span></div>
+  <div class="row"><span class="t"><b>11.</b> O funil completo + checklist de campanha</span><span>Operação</span></div>
+  <div class="row"><span class="t"><b>12.</b> Os 7 erros fatais (e o que fazer)</span><span>FAQ</span></div>
+</div>
+
+<!-- ===================== PARTE I ===================== -->
+<div class="part">
+  <div class="pnum">PARTE I</div>
+  <h2>A mentalidade<br>que muda tudo</h2>
+  <p>Antes de qualquer botão, qualquer câmera, qualquer real investido: você precisa entender por que tudo o que te ensinaram sobre “bombar nas redes” está sabotando suas vendas. Esta parte reprograma a forma como você enxerga a internet.</p>
+</div>
+
+<!-- ---------- CAP 1 ---------- -->
+<div class="chaptag">Parte I · Capítulo 1</div>
+<h2 class="chap"><span class="n">1.</span> Por que o corretor médio queima dinheiro</h2>
+
+<p class="lead">A rede social não é palco. É um mecanismo de distribuição que entrega exatamente aquilo que você pede. O problema é que quase todo corretor pede a coisa errada.</p>
+
+<p>Existe uma cena que se repete em todo o Brasil. Um corretor decide “investir em marketing”. Ele assiste a um guru dizendo que rede social é lugar de entretenimento, que é preciso prender a atenção nos três primeiros segundos, postar todos os dias, mostrar a rotina, gravar o café da manhã, dançar a trend do momento e construir audiência. O corretor então faz exatamente isso — ou se assusta com o volume de trabalho e nem começa. Nos dois casos, o resultado é o mesmo: o telefone até toca, mas quem chega são curiosos. Gente que pergunta o preço e some. Gente que, quando recebe uma mensagem de volta, responde “como você conseguiu meu número?”. Trinta dias depois, o orçamento evaporou e nenhuma chave trocou de mão.</p>
+
+<p>O erro não está no esforço. Está na <strong>física da plataforma</strong>. Quando você produz conteúdo para entreter, a rede social procura quem está ali para se entreter — pessoas no ônibus, no intervalo do almoço, na cama antes de dormir, querendo se distrair. Não pessoas querendo comprar um apartamento de quatrocentos mil reais. Você pediu atenção; a máquina te entregou, com precisão cirúrgica, quem dá atenção. E quem dá atenção a um corretor, na imensa maioria das vezes, é <em class="k">outro corretor</em>.</p>
+
+<div class="callout">
+  <div class="ct">A prova que ninguém te conta</div>
+  <p style="margin:0;">Repare nos grandes corretores “famosinhos” do Instagram. Mais cedo ou mais tarde, todos começam a vender curso para outros corretores. Por quê? Porque o público que eles construíram é formado por corretores. Eles viralizaram no feed de quem quer se inspirar — não no feed de quem quer comprar imóvel. O modelo de “viralizar para vender imóvel” é tão ineficiente que até quem consegue viralizar desiste de vender imóvel e passa a vender curso. Essa é a maior evidência de que atenção não é intenção.</p>
+</div>
+
+<p>Chamamos isso de <strong>Marketing de Atenção</strong>: você grita para a multidão, a multidão para para olhar, e você confunde olhares com clientes. O oposto — o caminho que realmente vende — é o <strong>Marketing de Intenção</strong>: em vez de atrair todo mundo, você fala diretamente, e apenas, com quem tem chance real de comprar aquele imóvel específico. O diagrama abaixo mostra os dois funis lado a lado. Guarde essa imagem; ela é a tese inteira desta apostila em uma figura só.</p>
+
+<figure class="diagram"><img src="img/01_atencao_vs_intencao.png" alt="Atenção vs Intenção">
+  <figcaption>Os dois funis. À esquerda, o erro caro. À direita, o método que esta apostila ensina.</figcaption>
+</figure>
+
+<p>Existe ainda uma armadilha emocional. Como “todo grande corretor do Instagram faz dancinha”, você conclui que precisa fazer igual. Mas você está copiando o sintoma, não a causa. Aqueles vídeos performam para corretores; eles não geram a venda do imóvel — geram a venda do curso. Quando você entende isso, uma liberdade enorme se instala: <strong>você não precisa aparecer, não precisa de seguidores, não precisa postar todo dia.</strong> Precisa de método.</p>
+
+<div class="quote">Você não precisa de nada disso para vender imóvel pela internet. O que prende a atenção do comprador não é você dançando — é o imóvel certo, mostrado para a pessoa certa, com a informação certa.
+<span class="src">— O princípio que rege todo o resto desta apostila</span></div>
+
+<!-- ---------- CAP 2 ---------- -->
+<div class="chaptag">Parte I · Capítulo 2</div>
+<h2 class="chap"><span class="n">2.</span> Dentro da cabeça do algoritmo</h2>
+
+<p class="lead">O algoritmo não é mágico nem maldoso. Ele é um copiador obediente. Quem você ensina ele a copiar é uma escolha sua — e quase ninguém escolhe de propósito.</p>
+
+<p>Pense no algoritmo como um robô que sabe quase tudo sobre cada pessoa que usa a plataforma: o que ela gosta, o que a faz parar de rolar o feed, o que ela ignora. Ao mesmo tempo, ele lê o seu conteúdo para descobrir <em>para quem</em> aquilo deveria ser mostrado. É por isso que, no dia em que você pensa em comprar um tênis, seu feed enche de anúncios de tênis. Não é coincidência nem leitura de pensamento: o robô percebeu uma intenção e entregou exatamente o que combina com ela. <strong>Essa mesma inteligência pode trabalhar para vender o seu imóvel</strong> — se você souber alimentá-la.</p>
+
+<p>Quando você sobe um anúncio, o algoritmo não sabe, de saída, quem é o público ideal. Então ele faz um teste: mostra para um grupo variado de pessoas e observa quem parou, quem assistiu até o fim, quem mandou mensagem, quem reagiu. Esse processo tem nome — <em class="k">otimização</em> — e é o coração de tudo. Assim que ele identifica um padrão de quem reage, ele dobra a aposta e vai atrás de mais gente parecida.</p>
+
+<figure class="diagram"><img src="img/02_ciclo_otimizacao.png" alt="Ciclo de otimização">
+  <figcaption>O ciclo que roda 24 horas por dia. Você não controla o algoritmo — você controla o que ele aprende a copiar.</figcaption>
+</figure>
+
+<p>E aqui está o detalhe que separa quem vende de quem quebra: <strong>o algoritmo não sabe se o lead é bom ou ruim.</strong> Ele só sabe se a pessoa reagiu. Se um curioso parou e mandou “quanto custa?”, para o robô isso é uma vitória — sinal de que o anúncio “funciona”. Então ele sai procurando mais gente igual àquele curioso. Resultado: os leads vão piorando, mensagem após mensagem, até o seu WhatsApp virar um cemitério de “só estava olhando”.</p>
+
+<div class="callout dark">
+  <div class="ct">A bola de neve da otimização</div>
+  <p style="margin:0;">Cada lead ruim que entra é registrado como sucesso. O algoritmo passa a buscar mais gente parecida com o lead ruim. Os leads pioram, e a campanha desce a ladeira. O mesmo mecanismo, alimentado ao contrário, vira uma avalanche <strong>a seu favor</strong>: cada comprador real que reage faz o robô buscar mais compradores reais. A escolha de qual bola de neve você cria está inteiramente nas suas mãos.</p>
+</div>
+
+<figure class="diagram"><img src="img/03_bola_de_neve.png" alt="Bola de neve boa e ruim">
+  <figcaption>O mesmo motor, dois destinos. A diferença é quem você deixa reagir ao seu anúncio.</figcaption>
+</figure>
+
+<p>A pergunta natural é: “entendi o problema, mas como eu faço o contrário?”. A resposta é desconcertantemente simples. Se o algoritmo entrega para quem você pede, <strong>peça outra coisa</strong>. Em vez de um gancho que atrai todo mundo, crie um gancho que <em>exclui</em> todo mundo que não interessa — e prende apenas quem pode comprar aquele imóvel. Em vez de entreter, informe. É exatamente isso que os três elementos da Parte II fazem, de forma sistemática.</p>
+
+<!-- ===================== PARTE II ===================== -->
+<div class="part">
+  <div class="pnum">PARTE II</div>
+  <h2>Os três elementos<br>do método</h2>
+  <p>O Marketing de Intenção não é uma tática solta — é uma máquina de três engrenagens. ICP real, imóvel protagonista e elementos qualificativos. Erre uma delas e a máquina inteira trava. Acerte as três e o algoritmo vira seu melhor vendedor.</p>
+</div>
+
+<figure class="diagram"><img src="img/04_tres_elementos.png" alt="Os 3 elementos">
+  <figcaption>O mapa da Parte II. Cada capítulo a seguir destrincha uma dessas três engrenagens.</figcaption>
+</figure>
+
+<!-- ---------- CAP 3 ---------- -->
+<div class="chaptag">Parte II · Elemento 1</div>
+<h2 class="chap"><span class="n">3.</span> O ICP real — a motivação, não a demografia</h2>
+
+<p class="lead">Noventa por cento dos corretores erram aqui. Eles confundem o perfil de cliente ideal com idade, gênero e bairro. Isso é dado demográfico — e dado demográfico não vende.</p>
+
+<p>ICP é a sigla, em inglês, para Perfil de Cliente Ideal. Mas o coração do ICP não é “homem, 35 a 45 anos, classe B”. O coração do ICP é <strong>a motivação de compra</strong>: o motivo pelo qual uma pessoa específica pode se interessar por aquele imóvel específico. É a dor que ela quer resolver, o medo que a tira do sono, o desejo que a faz sonhar. Quando você fala com a motivação certa, o anúncio para de competir por atenção e passa a ressoar com intenção.</p>
+
+<p>Veja como o mesmo ato — comprar um imóvel — esconde motivações completamente diferentes. O cliente do Minha Casa Minha Vida quer sair do aluguel e começar a construir a vida; ele compra segurança e independência. O cliente de um apartamento de dois milhões já tem onde morar; ele quer um <em>upgrade</em> — mais espaço, mais lazer, um endereço melhor, conforto para os filhos. São dores opostas. Um anúncio que fala “realize o sonho da casa própria” é perfeito para o primeiro e insultuoso para o segundo. Seu anúncio precisa falar com <strong>uma</strong> motivação por vez.</p>
+
+<figure class="diagram"><img src="img/05_mapa_icp.png" alt="Mapa de ICP">
+  <figcaption>O mesmo produto, quatro mundos emocionais distintos. Escolha um por campanha.</figcaption>
+</figure>
+
+<div class="callout">
+  <div class="ct">A regra que vale ouro</div>
+  <p style="margin:0;">No Marketing de Intenção, trabalhamos com a <strong>regra</strong>, não com a exceção. Um imóvel de dois milhões e meio: quem é mais provável comprar, um homem de quarenta anos estabelecido ou um jovem de vinte e dois? “Mas eu conheço um rapaz de vinte e dois com cinquenta milhões na conta.” Ele é a exceção — não a regra. Se você mira na exceção, gasta dinheiro e energia à toa. Se mira na regra, multiplica suas chances de vender. <strong>O dinheiro está na regra.</strong></p>
+</div>
+
+<p>Na prática, antes de qualquer anúncio, responda por escrito: para este imóvel específico, qual é a motivação dominante de quem compra? O que essa pessoa teme? O que ela deseja sentir ao assinar o contrato? Essas respostas são o briefing do seu vídeo e da sua copy. Sem elas, você está atirando no escuro e pagando a munição.</p>
+
+<figure class="photo"><img src="img/interior.jpg" alt="Interior de apartamento">
+  <figcaption>Cada ambiente conversa com uma motivação: a sala ampla fala de convívio; o quarto extra, de filhos; a varanda, de descanso.</figcaption>
+</figure>
+
+<!-- ---------- CAP 4 ---------- -->
+<div class="chaptag">Parte II · Elemento 2</div>
+<h2 class="chap"><span class="n">4.</span> O imóvel como protagonista</h2>
+
+<p class="lead">No mercado imobiliário, o comprador não quer ver você. Ele quer ver o imóvel. O dia em que você entende isso, para de se preocupar em aparecer e começa a vender.</p>
+
+<p>Existe uma diferença crucial entre o mercado imobiliário e quase todos os outros. Em muitos nichos, o vendedor pode ser a estrela. No imóvel, não. O comprador está apaixonado por um espaço, por uma planta, por uma vista — não pelo seu carisma. Quando o corretor se coloca como personagem principal do vídeo, dançando, fazendo gracinha, contando historinha, ele atrai exatamente o público errado: outros corretores que admiram a “produção”. O astro do seu vídeo, do primeiro ao último quadro, deve ser <strong>o imóvel</strong>.</p>
+
+<p>Isso não é só estética; é qualificação. Se o que capturou a atenção da pessoa foi o próprio imóvel — a metragem, a vista para o mar, a área de lazer — então o lead que chega já vem aquecido pelo produto certo. Ele não te chamou porque te achou simpático; te chamou porque <em>aquele apartamento</em> mexeu com ele. A chance de sair uma venda é incomparavelmente maior.</p>
+
+<div class="grid2">
+  <figure class="photo tall"><img src="img/frente_mar.jpg" alt="Frente mar"><figcaption>O imóvel vende sozinho quando é o centro do quadro.</figcaption></figure>
+  <figure class="photo tall"><img src="img/varanda.jpg" alt="Varanda"><figcaption>Detalhes que o comprador certo já está procurando.</figcaption></figure>
+</div>
+
+<p>Há um efeito colateral libertador: filmar o imóvel é <strong>mais simples, mais rápido e mais barato</strong> do que se transformar em influenciador. Você não precisa de roteiro decorado, não precisa de carisma de palco, não precisa de equipe. Precisa mostrar bem o produto — boa luz, sequência lógica dos ambientes, e os números que importam aparecendo na tela. Menos ego, mais venda.</p>
+
+<div class="callout">
+  <div class="ct">Regra de ouro da gravação</div>
+  <p style="margin:0;">O primeiro quadro do vídeo já deve ser o imóvel — nunca o seu rosto. Os primeiros segundos não servem para “prender todo mundo”; servem para <strong>identificar o comprador certo</strong>. Mostrar logo a vista, a sala, a fachada ou a planta funciona como um crachá: quem se interessa, fica; quem não é o público, sai. E sair é ótimo — é o algoritmo aprendendo quem evitar.</p>
+</div>
+
+<!-- ---------- CAP 5 ---------- -->
+<div class="chaptag">Parte II · Elemento 3</div>
+<h2 class="chap"><span class="n">5.</span> Os elementos qualificativos</h2>
+
+<p class="lead">É o que separa um Instagram que gera vendas de um Instagram que só gera engajamento e curiosos. Você vai, literalmente, expulsar gente do seu conteúdo — de propósito.</p>
+
+<p>Elementos qualificativos são as informações que deixam <strong>explícito</strong> para quem é aquele imóvel. Preço. Metragem. Número de quartos e vagas. Condição de pagamento. Bairro. Status (na planta, em construção, pronto para morar). Nada nas entrelinhas, nada ambíguo. Quando você coloca o preço logo no anúncio, está fazendo um ato aparentemente contraintuitivo: está <em>repelindo</em> quem não pode ou não quer pagar aquele valor. E é justamente isso que faz o método funcionar.</p>
+
+<p>Lembre da física do algoritmo. Quando o curioso vê o preço e vai embora sem interagir, o robô registra: “esta pessoa não é para este conteúdo”. Ele passa a afastar perfis parecidos com o curioso. Ao mesmo tempo, quem tem interesse real fica, interage, manda mensagem — e o robô passa a buscar mais gente como essa. Você está, simultaneamente, otimizando a máquina para <strong>expulsar o errado e atrair o certo</strong>. Os elementos qualificativos são o gatilho desse duplo movimento.</p>
+
+<div class="callout dark">
+  <div class="ct">Por que esconder o preço é o pior conselho que te deram</div>
+  <p style="margin:0;">“Não coloque o preço para a pessoa ter que perguntar.” Esse conselho enche seu WhatsApp de gente perguntando preço e sumindo — e ensina o algoritmo que curiosos são seu público. O preço visível não afasta o comprador real; ele afasta o curioso. <strong>O comprador certo quer o preço.</strong> É a primeira coisa que ele procura.</p>
+</div>
+
+<p>Na prática, todo anúncio deve carregar, de forma clara e cedo: o valor, a metragem, a configuração (quartos/vagas), a condição (financiável, entrada, etc.) e a localização. Quanto mais específico, mais afiado é o filtro — e mais qualificado é o lead que sobra do outro lado.</p>
+
+<!-- ===================== PARTE III ===================== -->
+<div class="part">
+  <div class="pnum">PARTE III</div>
+  <h2>Mão na massa</h2>
+  <p>Teoria sem execução é só entretenimento caro. Nesta parte você sai do conceito e entra na conta de anúncios: como montar o criativo, escrever o gancho, configurar a campanha no Meta Ads e atender no WhatsApp de um jeito que transforma clique em visita e visita em proposta.</p>
+</div>
+
+<!-- ---------- CAP 6 ---------- -->
+<div class="chaptag">Parte III · Capítulo 6</div>
+<h2 class="chap"><span class="n">6.</span> A anatomia do anúncio + 30 ganchos que filtram</h2>
+
+<p class="lead">Um bom anúncio imobiliário não é bonito — é cirúrgico. Cada elemento tem uma função: ou atrai o comprador certo, ou repele o curioso. Nada é decorativo.</p>
+
+<p>O anúncio que vende segue uma estrutura quase invariável. Ele abre com o imóvel em foco (o gancho que filtra), traz os números que qualificam logo nos primeiros segundos, descreve a condição e a localização de forma objetiva, e termina com uma chamada direta para a conversa no WhatsApp — não para um link genérico, porque um link é diferente de um cliente. A figura abaixo disseca essa anatomia peça por peça.</p>
+
+<figure class="diagram"><img src="img/06_anatomia_anuncio.png" alt="Anatomia do anúncio">
+  <figcaption>Cada bloco do anúncio tem uma função de qualificação. Copie essa estrutura.</figcaption>
+</figure>
+
+<h3>O gancho é um filtro, não um ímã</h3>
+<p>O gancho (a abertura do vídeo) é o ponto mais mal compreendido do marketing imobiliário. O guru ensina a “prender a atenção de todo mundo nos três primeiros segundos”. Você vai fazer o contrário: criar uma abertura que <strong>afasta quem não interessa</strong> e fisga apenas quem pode comprar aquele imóvel. Um bom gancho de intenção menciona, logo de cara, um elemento qualificativo forte — o preço, o bairro, a faixa, a condição — para que o curioso role o feed e o comprador pare.</p>
+
+<div class="callout">
+  <div class="ct">Banco de 30 ganchos que repelem curiosos e atraem compradores</div>
+  <p style="margin:0 0 2mm;">Adapte cada um ao seu imóvel. Note como quase todos começam por um filtro (preço, perfil, região, condição):</p>
+  <ol class="hooks">
+    <li>“Apartamento de R$ 389 mil no [bairro] — pronto para morar.”</li>
+    <li>“Se você procura 3 quartos por menos de R$ 500 mil, é este aqui.”</li>
+    <li>“Frente-mar na [praia] a partir de R$ X. Veja por dentro.”</li>
+    <li>“Para quem vai sair do aluguel ainda este ano.”</li>
+    <li>“Financia pela Caixa, entrada facilitada — R$ X.”</li>
+    <li>“Imóvel para investidor: aluguel paga a parcela.”</li>
+    <li>“2 vagas, varanda gourmet e R$ X. Quem busca isso, assiste até o fim.”</li>
+    <li>“Última unidade do [empreendimento] nessa metragem.”</li>
+    <li>“Você que quer trocar o compacto por um maior: olha esse.”</li>
+    <li>“Casa em condomínio fechado no [bairro] — valor na descrição.”</li>
+    <li>“Pronto para morar, sem obra, sem espera. R$ X.”</li>
+    <li>“Quem tem FGTS pode usar como entrada aqui.”</li>
+    <li>“Apartamento de alto padrão — se R$ 2 mi está no seu radar, veja.”</li>
+    <li>“Para a família que precisa de um quarto a mais.”</li>
+    <li>“Studio para renda de temporada na [região turística].”</li>
+    <li>“R$ X por m² no [bairro mais valorizado]. Faça a conta.”</li>
+    <li>“Vista permanente, não tem prédio na frente. R$ X.”</li>
+    <li>“Quer morar perto do [polo/escola/praia]? Este fica a 5 min.”</li>
+    <li>“Imóvel na planta com o melhor preço de tabela — congelado.”</li>
+    <li>“Se você já tem a entrada de R$ X, o resto eu te explico.”</li>
+    <li>“Cobertura duplex — para quem busca o topo do prédio.”</li>
+    <li>“Lazer completo: piscina, academia, salão. R$ X.”</li>
+    <li>“Primeiro imóvel? Este foi feito para você começar.”</li>
+    <li>“Pet friendly, área verde e R$ X. Para quem tem cachorro.”</li>
+    <li>“Reformado, mobiliado, é só levar a mala. R$ X.”</li>
+    <li>“Quem trabalha em casa vai amar esse escritório integrado.”</li>
+    <li>“Permuta aceita: tem um imóvel para dar na troca?”</li>
+    <li>“Aposentado buscando térreo, sem escada? É aqui.”</li>
+    <li>“Compre na planta e pague a obra em 36x direto com a construtora.”</li>
+    <li>“R$ X à vista com desconto — para quem decide rápido.”</li>
+  </ol>
+</div>
+
+<!-- ---------- CAP 7 ---------- -->
+<div class="chaptag">Parte III · Capítulo 7</div>
+<h2 class="chap"><span class="n">7.</span> Os três formatos que mais vendem</h2>
+
+<p class="lead">Você não precisa de cinco ou dez formatos de criativo. Precisa de três que funcionam — e de disciplina para repeti-los, imóvel após imóvel.</p>
+
+<p>Quem vende com consistência não vive inventando formato novo. Pelo contrário: domina um punhado de estruturas e as replica. A seguir, os três formatos de anúncio que sustentam a maioria das vendas no método. Todos respeitam os três elementos: imóvel protagonista, qualificativos visíveis e gancho que filtra.</p>
+
+<h3>Formato 1 — O tour objetivo (walkthrough)</h3>
+<p>Uma caminhada filmada pelo imóvel, na ordem em que alguém o visitaria: entrada, sala, cozinha, quartos, varanda, vista. Sem você na frente da câmera. Texto na tela com preço, metragem e condição logo nos primeiros segundos. É o formato mais versátil e o que melhor qualifica, porque o comprador “visita” o imóvel antes de te chamar. Narração opcional e objetiva, focada em fatos (“suíte com closet”, “cozinha com armários planejados”), nunca em adjetivos vazios.</p>
+
+<h3>Formato 2 — O destaque de oportunidade (preço/condição)</h3>
+<p>Anúncio curto e direto cujo herói é a condição comercial: um preço abaixo do metro quadrado da região, uma entrada facilitada, um financiamento direto, uma última unidade. Abre com o número (“R$ X — abaixo da tabela do bairro”) e mostra rapidamente o imóvel para sustentar a oferta. Excelente para gerar urgência genuína em quem já está no mercado de compra.</p>
+
+<h3>Formato 3 — O recorte por motivação (ICP específico)</h3>
+<p>Aqui o gancho é a motivação, não o imóvel em si. “Para quem vai sair do aluguel”, “para a família que precisa de um quarto a mais”, “para o investidor que quer renda de temporada”. O vídeo conecta um recurso do imóvel à dor do ICP. É o formato mais poderoso quando você já conhece bem a motivação dominante daquele público (Capítulo 3).</p>
+
+<div class="callout dark">
+  <div class="ct">Disciplina &gt; variedade</div>
+  <p style="margin:0;">Fixe esses três formatos por pelo menos seis meses. Troque o imóvel, troque o gancho, mantenha a estrutura. Variedade excessiva confunde sua leitura de resultado; repetição com pequenas variações te dá dados claros sobre o que funciona.</p>
+</div>
+
+<!-- ---------- CAP 8 ---------- -->
+<div class="chaptag">Parte III · Capítulo 8</div>
+<h2 class="chap"><span class="n">8.</span> Meta Ads do zero, sem medo</h2>
+
+<p class="lead">Você não precisa ser especialista em tecnologia. Precisa entender três níveis e tomar uma decisão certa em cada um deles.</p>
+
+<p>Toda campanha no Meta Ads (Facebook e Instagram) tem três camadas. Confundi-las é a origem da maioria dos desperdícios. Na <strong>Campanha</strong>, você escolhe o objetivo. No <strong>Conjunto de Anúncios</strong>, você define público, região e orçamento. No <strong>Anúncio</strong>, você coloca o criativo e a copy. Cada nível, uma decisão.</p>
+
+<figure class="diagram"><img src="img/07_estrutura_meta_ads.png" alt="Estrutura Meta Ads">
+  <figcaption>Os três níveis da campanha. Domine essa hierarquia e o resto é detalhe.</figcaption>
+</figure>
+
+<h3>Nível 1 — Objetivo da campanha</h3>
+<p>Para o método, o objetivo certo é gerar conversa: <em class="k">Engajamento → mensagens</em> ou <em class="k">Vendas → conversas no WhatsApp</em>. Você quer que o algoritmo otimize para pessoas propensas a <strong>mandar mensagem</strong>, não a curtir ou comentar. Fuja de objetivos de “alcance” ou “reconhecimento de marca” — eles te entregam audiência, não compradores.</p>
+
+<h3>Nível 2 — Conjunto de anúncios (onde mora a estratégia)</h3>
+<p>Aqui você traduz o ICP em configuração. Defina a <strong>região</strong> com critério: o raio em torno do imóvel para quem busca morar perto; o estado ou país inteiro para imóveis de investimento e frente-mar, que atraem compradores de fora. Comece com <strong>orçamento enxuto e constante</strong> — R$ 30 por dia é suficiente para o algoritmo aprender. Deixe a segmentação detalhada relativamente ampla: o método ensina o algoritmo a achar o público <em>pelo criativo qualificador</em>, não por interesses manuais. O filtro está no anúncio, não na segmentação.</p>
+
+<h3>Nível 3 — O anúncio</h3>
+<p>É onde entram o vídeo do imóvel (Capítulo 4), o gancho que filtra (Capítulo 6) e os qualificativos (Capítulo 5). A copy repete e reforça os números do vídeo e termina com a chamada para o WhatsApp. Use a configuração de “clique para o WhatsApp” para que a conversa comece com contexto.</p>
+
+<div class="callout">
+  <div class="ct">Leitura de resultado, sem se enganar</div>
+  <p style="margin:0;">Não julgue a campanha por curtidas. Julgue por <strong>conversas qualificadas</strong> que viram visita. Dê ao algoritmo alguns dias para sair da fase de aprendizado antes de mexer. Mexer demais reinicia o aprendizado e queima orçamento. Constância vence ansiedade.</p>
+</div>
+
+<figure class="photo"><img src="img/celular_ads.jpg" alt="Pessoa com celular">
+  <figcaption>O comprador certo está com o celular na mão, procurando exatamente o que você anuncia.</figcaption>
+</figure>
+
+<!-- ---------- CAP 9 ---------- -->
+<div class="chaptag">Parte III · Capítulo 9</div>
+<h2 class="chap"><span class="n">9.</span> O atendimento que fecha — script de WhatsApp</h2>
+
+<p class="lead">O anúncio entrega a conversa. A venda acontece no WhatsApp. Um link é diferente de um cliente — e um lead só vira cliente se você qualificar bem e rápido.</p>
+
+<p>Dois erros matam o atendimento: a lentidão e a falta de qualificação. Responder horas depois mata o calor do lead; tratar todo lead igual desperdiça seu tempo com quem nunca vai comprar. O script a seguir resolve os dois. Ele é rápido na resposta e cirúrgico na qualificação — descobrindo, em poucas mensagens, se a pessoa tem <strong>intenção</strong> e <strong>capacidade</strong>.</p>
+
+<figure class="diagram"><img src="img/08_fluxo_whatsapp.png" alt="Fluxo de WhatsApp">
+  <figcaption>O fluxo de qualificação. Cada pergunta separa o comprador real do curioso.</figcaption>
+</figure>
+
+<div class="script">
+<p><span class="you"><b>Você (em até 5 min):</b></span> “Oi, [nome]! Vi que você se interessou pelo [imóvel/condição]. Ele tem [metragem], [quartos] e está [condição]. Posso te tirar todas as dúvidas por aqui?”</p>
+<p><span class="lead2"><b>Lead:</b></span> “Oi, queria saber mais.”</p>
+<p><span class="you"><b>Você (intenção):</b></span> “Show. Você está procurando para <b>morar</b> ou para <b>investir</b>? Assim eu te mostro o que faz mais sentido.”</p>
+<p><span class="you"><b>Você (capacidade):</b></span> “Perfeito. E como você pretende fazer a compra — <b>financiamento</b> ou <b>à vista</b>? Se for financiamento, você já tem aprovação ou quer que eu te oriente?”</p>
+<p><span class="you"><b>Você (agendar):</b></span> “Esse imóvel costuma sair rápido. Posso te mostrar pessoalmente? Você prefere <b>amanhã à tarde</b> ou <b>sábado de manhã</b>?”</p>
+</div>
+
+<p>Repare na engenharia: a pergunta “morar ou investir?” revela a motivação (e te diz qual discurso usar). A pergunta sobre financiamento revela a capacidade — e, gentilmente, dispensa quem não tem condição naquele momento. E a oferta de dois horários fechados (“amanhã à tarde ou sábado de manhã”) facilita o sim. Você não pergunta <em>se</em> a pessoa quer visitar; pergunta <em>quando</em>.</p>
+
+<div class="callout dark">
+  <div class="ct">A regra dos 5 minutos</div>
+  <p style="margin:0;">Lead de tráfego pago esfria em minutos. Quem responde primeiro, na prática, atende primeiro. Tenha as primeiras mensagens prontas (atalhos/respostas rápidas) e priorize velocidade. Um lead respondido em 5 minutos vale muito mais do que três leads respondidos no dia seguinte.</p>
+</div>
+
+<figure class="photo"><img src="img/corretor.jpg" alt="Corretor e cliente">
+  <figcaption>Qualificou bem no WhatsApp, a visita já começa com proposta na cabeça do comprador.</figcaption>
+</figure>
+
+<!-- ===================== PARTE IV ===================== -->
+<div class="part">
+  <div class="pnum">PARTE IV</div>
+  <h2>Escala e<br>consistência</h2>
+  <p>Uma venda pode ser sorte. Um sistema é o que transforma sorte em previsibilidade. Nesta parte você aprende a transformar comissão em combustível, a operar com checklist e a evitar os erros que fazem a maioria desistir antes da bola de neve girar.</p>
+</div>
+
+<!-- ---------- CAP 10 ---------- -->
+<div class="chaptag">Parte IV · Capítulo 10</div>
+<h2 class="chap"><span class="n">10.</span> A bola de neve do reinvestimento</h2>
+
+<p class="lead">R$ 16 investidos viraram R$ 12 mil de comissão. Esse não é o fim da história — é o começo de um sistema que se autoalimenta.</p>
+
+<p>Vamos fazer a conta no pessimismo, para tirar a sorte da equação. Em vez de R$ 16, suponha que você invista R$ 30 por dia — R$ 900 no mês. Suponha que isso gere <strong>uma única venda</strong> de um imóvel de quatrocentos mil, com comissão de R$ 12 mil. Você conhece algum investimento que transforme R$ 900 em R$ 12 mil em trinta dias? Esse é o ponto de partida, não o teto.</p>
+
+<p>Agora vem o mecanismo da escala. Dos R$ 12 mil que entraram, você separa dois ou três mil para reinvestir em anúncios no mês seguinte. Mais verba bem aplicada significa mais campanhas, mais leads qualificados, mais visitas — e, muito provavelmente, mais de uma venda. Você vende, reinveste, vende, reinveste. É a bola de neve da otimização (Capítulo 2) operando agora no seu <strong>caixa</strong>, não só no algoritmo.</p>
+
+<figure class="diagram"><img src="img/09_escala_matematica.png" alt="Matemática da escala">
+  <figcaption>Projeção conservadora de reinvestimento. O investido cresce devagar; a comissão cresce em escala.</figcaption>
+</figure>
+
+<div class="callout">
+  <div class="ct">O ativo invisível</div>
+  <p style="margin:0;">Cada campanha que roda também <strong>treina o seu algoritmo</strong> e amadurece sua leitura de criativo, gancho e público. Com o tempo, seu custo por lead qualificado cai e sua taxa de conversão sobe. Você não está só comprando vendas — está construindo uma máquina que fica melhor a cada mês.</p>
+</div>
+
+<!-- ---------- CAP 11 ---------- -->
+<div class="chaptag">Parte IV · Capítulo 11</div>
+<h2 class="chap"><span class="n">11.</span> O funil completo + checklist de campanha</h2>
+
+<p class="lead">Tudo o que você leu até aqui é um único funil. Cada etapa tem uma só missão: remover o curioso e concentrar o comprador real.</p>
+
+<p>Visto de cima, o método é uma linha reta com cinco estações. O anúncio filtra; o algoritmo otimiza; o WhatsApp qualifica; a visita aproxima; a proposta fecha. A elegância está em que <strong>cada etapa reforça a anterior</strong>: um anúncio bem qualificado facilita o atendimento, que facilita a visita, que facilita a proposta. Erros lá no topo (gancho que atrai todo mundo) contaminam tudo o que vem depois.</p>
+
+<figure class="diagram"><img src="img/10_funil_completo.png" alt="Funil completo">
+  <figcaption>O sistema inteiro em uma imagem. Imprima e cole na parede.</figcaption>
+</figure>
+
+<h3>Checklist pré-lançamento de campanha</h3>
+<p>Antes de subir qualquer campanha, passe por esta lista. Ela existe para você nunca esquecer um detalhe e nunca queimar verba por descuido.</p>
+<ul class="clean">
+  <li>Defini a <strong>motivação dominante</strong> (ICP real) deste imóvel específico?</li>
+  <li>O <strong>primeiro quadro</strong> do vídeo é o imóvel — e não meu rosto?</li>
+  <li>O <strong>gancho</strong> filtra (menciona preço, perfil, região ou condição) em vez de atrair todo mundo?</li>
+  <li>Os <strong>qualificativos</strong> (preço, metragem, quartos/vagas, condição, bairro) aparecem cedo e claros?</li>
+  <li>O <strong>objetivo</strong> da campanha é mensagens/conversas no WhatsApp?</li>
+  <li>A <strong>região</strong> está coerente com o ICP (raio local x estado/país para investimento)?</li>
+  <li>O <strong>orçamento</strong> é constante e suficiente (ex.: R$ 30/dia) para o algoritmo aprender?</li>
+  <li>A <strong>chamada</strong> leva para conversa no WhatsApp (não para um link solto)?</li>
+  <li>Minhas <strong>respostas rápidas</strong> de WhatsApp estão prontas (regra dos 5 minutos)?</li>
+  <li>Combinei comigo mesmo <strong>não mexer</strong> na campanha nos primeiros dias de aprendizado?</li>
+</ul>
+
+<!-- ---------- CAP 12 ---------- -->
+<div class="chaptag">Parte IV · Capítulo 12</div>
+<h2 class="chap"><span class="n">12.</span> Os sete erros fatais (e o que fazer)</h2>
+
+<p class="lead">A maioria dos corretores não fracassa por falta de método — fracassa por repetir, sem perceber, um destes sete erros. Conheça-os para nunca cometê-los.</p>
+
+<table>
+  <tr><th style="width:34%">O erro</th><th>O que fazer no lugar</th></tr>
+  <tr><td><strong>1. Produzir para entreter</strong></td><td>Produza para informar. O objetivo do vídeo é qualificar, não viralizar.</td></tr>
+  <tr><td><strong>2. Aparecer no lugar do imóvel</strong></td><td>Tire-se da tela. O astro é o imóvel; o primeiro quadro é dele.</td></tr>
+  <tr><td><strong>3. Esconder o preço</strong></td><td>Mostre o preço e os qualificativos cedo. Eles repelem o curioso e atraem o comprador.</td></tr>
+  <tr><td><strong>4. Mirar na exceção</strong></td><td>Trabalhe com a regra. Defina a motivação dominante e fale com ela.</td></tr>
+  <tr><td><strong>5. Otimizar para o objetivo errado</strong></td><td>Use objetivo de mensagens/conversas, nunca alcance ou curtidas.</td></tr>
+  <tr><td><strong>6. Atender devagar e sem filtro</strong></td><td>Responda em até 5 min e qualifique intenção + capacidade antes da visita.</td></tr>
+  <tr><td><strong>7. Mexer na campanha o tempo todo</strong></td><td>Dê tempo ao aprendizado. Constância e reinvestimento &gt; ansiedade.</td></tr>
+</table>
+
+<h3>Perguntas que todo corretor faz</h3>
+<p><strong>“Preciso ter seguidores?”</strong> Não. O método funciona com tráfego pago e qualificação; seguidores são irrelevantes para a venda do imóvel.</p>
+<p><strong>“Preciso aparecer / saber editar vídeo?”</strong> Não. Você precisa mostrar bem o imóvel. Câmera de celular, boa luz e os números na tela bastam.</p>
+<p><strong>“R$ 30 por dia é pouco?”</strong> É suficiente para começar e para o algoritmo aprender. A escala vem do reinvestimento, não de um orçamento gigante no dia um.</p>
+<p><strong>“E se eu moro no interior?”</strong> O método funciona em capital e interior. Muda a região e, às vezes, a motivação — não o sistema.</p>
+<p><strong>“Quanto tempo até a primeira venda?”</strong> Com o criativo certo e atendimento rápido, é possível ter campanha rodando e leads qualificados chegando em poucos dias. A venda depende do seu fechamento — mas o funil entrega a oportunidade.</p>
+
+<!-- ---------- ENCERRAMENTO ---------- -->
+<div class="callout dark" style="margin-top:10mm;">
+  <div class="ct">Em uma frase</div>
+  <p style="margin:0; font-size:12.5pt;">Pare de pedir <strong>atenção</strong> e comece a pedir <strong>intenção</strong>: mostre o imóvel certo, com a informação certa, para a pessoa certa — e deixe o algoritmo fazer o trabalho pesado de encontrar mais gente como ela. O curioso vai embora; o comprador fica. É assim que R$ 30 por dia viram comissões que mudam o seu ano.</p>
+</div>
+
+<p style="text-align:center; margin-top:10mm; font-family:'Helvetica Neue',sans-serif; color:#9a8b6a; font-size:9.5pt;">
+— Fim da apostila —<br>
+<span style="font-size:8.5pt;">Material didático de engenharia reversa do método “Marketing de Intenção” aplicado à venda de imóveis.<br>
+Imagens fotográficas sob licenças Creative Commons (Openverse). Infográficos de produção própria.</span>
+</p>
+
+</body>
+</html>
