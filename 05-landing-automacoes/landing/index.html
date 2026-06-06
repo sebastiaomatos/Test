@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apê 2 Quartos no [Bairro] — Pronto pra Morar | Imóveis AQV</title>
+<meta name="description" content="Apartamento de 2 quartos no [Bairro], a partir de R$ 389 mil. Financia pela Caixa e usa o FGTS na entrada. Agende sua visita pelo WhatsApp.">
+<!-- Open Graph -->
+<meta property="og:title" content="Apê 2 Quartos no [Bairro] — Pronto pra Morar">
+<meta property="og:description" content="A partir de R$ 389 mil. Financia + FGTS. Visita no mesmo dia.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Fraunces:ital,opsz,wght@1,9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!--
+  ┌────────────────────────────────────────────────────────────────┐
+  │  CONFIGURE EM script.js:  CONFIG.phone (DDI+DDD+número)          │
+  │  e CONFIG.formEndpoint (URL do seu CRM / webhook).              │
+  │  Os parâmetros UTM da URL são capturados e enviados             │
+  │  automaticamente para o WhatsApp e para o formulário.           │
+  └────────────────────────────────────────────────────────────────┘
+-->
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#topo">Imóveis<span>AQV</span></a>
+    <a class="btn btn--wa btn--sm" data-wa data-msg="Oi! Vim pelo site e quero saber mais sobre o apê no [Bairro].">Falar no WhatsApp</a>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="topo">
+  <div class="hero__bg" style="background-image:url('assets/hero.jpg')"></div>
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <span class="tagline">Pronto pra morar · [Bairro], [Cidade]</span>
+      <h1>O apê de 2 quartos que tira você do aluguel.</h1>
+      <p class="lead">Financia pela Caixa, usa o FGTS na entrada e a parcela cabe no seu bolso. Agende uma visita e veja por dentro — sem compromisso.</p>
+      <ul class="specs">
+        <li><b>R$ 389mil</b><span>a partir de</span></li>
+        <li><b>68 m²</b><span>2 qtos · 1 vaga</span></li>
+        <li><b>Pronto</b><span>pra morar</span></li>
+      </ul>
+      <div class="hero__cta">
+        <a class="btn btn--wa btn--lg" data-wa data-msg="Oi! Vim pelo site. Quero ver o apê de 2 quartos no [Bairro] e simular o financiamento.">Quero agendar minha visita</a>
+        <a class="btn btn--ghost btn--lg" href="#simulacao">Simular financiamento</a>
+      </div>
+      <p class="microtrust">★★★★★ Atendimento no mesmo dia · resposta em minutos</p>
+    </div>
+
+    <!-- FORM CARD -->
+    <aside class="card form-card" id="form">
+      <h3>Receba a condição e a simulação</h3>
+      <p class="card__sub">Preencha e fale agora com um especialista no WhatsApp.</p>
+      <form id="leadForm" novalidate>
+        <label>Seu nome
+          <input type="text" name="nome" required placeholder="Como podemos te chamar?">
+        </label>
+        <label>WhatsApp
+          <input type="tel" name="telefone" required placeholder="(00) 90000-0000" inputmode="tel">
+        </label>
+        <label>Você procura para
+          <select name="intencao" required>
+            <option value="">Selecione…</option>
+            <option>Morar</option>
+            <option>Investir</option>
+          </select>
+        </label>
+        <label>Como pretende comprar
+          <select name="pagamento" required>
+            <option value="">Selecione…</option>
+            <option>Financiamento</option>
+            <option>À vista</option>
+            <option>Ainda não sei</option>
+          </select>
+        </label>
+        <button type="submit" class="btn btn--wa btn--block">Quero falar no WhatsApp</button>
+        <p class="form__err" id="formErr" hidden>Confira os campos destacados.</p>
+        <p class="form__priv">🔒 Seus dados são tratados com segurança e não são compartilhados.</p>
+      </form>
+    </aside>
+  </div>
+</section>
+
+<!-- ===== QUALIFICATIVOS ===== -->
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec__title">Por que esse apê vende rápido</h2>
+    <div class="feats">
+      <div class="feat"><div class="feat__ic">🏦</div><h4>Financia pela Caixa</h4><p>Use o financiamento e parcele em até 35 anos com as menores taxas.</p></div>
+      <div class="feat"><div class="feat__ic">💰</div><h4>FGTS na entrada</h4><p>Tem 3 anos de carteira? Pode usar o saldo do FGTS como entrada.</p></div>
+      <div class="feat"><div class="feat__ic">📍</div><h4>Localização</h4><p>Perto de mercado, escola e transporte — no [Bairro], em [Cidade].</p></div>
+      <div class="feat"><div class="feat__ic">🔑</div><h4>Pronto pra morar</h4><p>Sem obra, sem espera. Recebeu a chave, mudou.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GALERIA ===== -->
+<section class="sec sec--dark">
+  <div class="wrap">
+    <h2 class="sec__title">Conheça por dentro</h2>
+    <div class="gallery">
+      <figure><img loading="lazy" src="assets/g1.jpg" alt="Sala integrada"><figcaption>Sala integrada</figcaption></figure>
+      <figure><img loading="lazy" src="assets/g2.jpg" alt="Cozinha"><figcaption>Cozinha planejada</figcaption></figure>
+      <figure><img loading="lazy" src="assets/g3.jpg" alt="Quarto"><figcaption>Suíte</figcaption></figure>
+      <figure><img loading="lazy" src="assets/g4.jpg" alt="Varanda"><figcaption>Varanda</figcaption></figure>
+      <figure><img loading="lazy" src="assets/g5.jpg" alt="Lazer"><figcaption>Lazer completo</figcaption></figure>
+      <figure><img loading="lazy" src="assets/g6.jpg" alt="Chaves"><figcaption>Chave na mão</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROVA SOCIAL ===== -->
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec__title">Quem já comprou com a gente</h2>
+    <div class="quotes">
+      <blockquote>“Achei que nunca sairia do aluguel. Em 5 dias meu financiamento estava aprovado.”<cite>— Cliente, [Cidade]</cite></blockquote>
+      <blockquote>“Vi o vídeo, chamei no WhatsApp e visitei no mesmo dia. Fechei na semana.”<cite>— Cliente, [Cidade]</cite></blockquote>
+      <blockquote>“Atendimento rápido e sem enrolação. Me explicaram a parcela na hora.”<cite>— Cliente, [Cidade]</cite></blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SIMULAÇÃO / CONDIÇÃO ===== -->
+<section class="sec sec--gold" id="simulacao">
+  <div class="wrap band">
+    <div>
+      <h2 class="sec__title sec__title--left">A parcela pode ser parecida com o seu aluguel</h2>
+      <p>Faça uma simulação gratuita e descubra em 2 minutos quanto ficaria a sua parcela — com FGTS na entrada e financiamento pela Caixa.</p>
+      <a class="btn btn--dark btn--lg" data-wa data-msg="Oi! Quero simular o financiamento do apê no [Bairro]. Pode me ajudar?">Quero minha simulação grátis</a>
+    </div>
+    <div class="band__box">
+      <div class="band__row"><span>Valor do imóvel</span><b>R$ 389.000</b></div>
+      <div class="band__row"><span>Entrada com FGTS*</span><b>a partir de R$ 0</b></div>
+      <div class="band__row"><span>Parcela estimada*</span><b>sob simulação</b></div>
+      <p class="band__note">*Valores ilustrativos. A condição final depende da análise de crédito.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="sec">
+  <div class="wrap wrap--narrow">
+    <h2 class="sec__title">Perguntas frequentes</h2>
+    <details><summary>Preciso de entrada?</summary><p>Em muitos casos o FGTS cobre a entrada. Fazemos a simulação e te mostramos a melhor condição.</p></details>
+    <details><summary>Posso usar o FGTS?</summary><p>Sim, se você tem 3 anos de carteira assinada (somados) e não possui imóvel registrado. Confirmamos isso na conversa.</p></details>
+    <details><summary>O imóvel está pronto?</summary><p>Sim, pronto pra morar. Você pode visitar e, aprovado o financiamento, receber a chave.</p></details>
+    <details><summary>Como funciona a visita?</summary><p>Você agenda pelo WhatsApp e visitamos no horário que for melhor pra você — muitas vezes no mesmo dia.</p></details>
+  </div>
+</section>
+
+<!-- ===== CTA FINAL ===== -->
+<section class="sec sec--cta">
+  <div class="wrap center">
+    <h2>Vamos agendar sua visita?</h2>
+    <p class="lead">Em poucos minutos no WhatsApp você descobre a parcela e marca o melhor horário.</p>
+    <a class="btn btn--wa btn--lg" data-wa data-msg="Oi! Quero agendar uma visita ao apê de 2 quartos no [Bairro].">Falar no WhatsApp agora</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <span>Imóveis<b>AQV</b> · CRECI 00000-F</span>
+    <span class="foot__leg">As imagens são meramente ilustrativas. Valores sujeitos a alteração e análise de crédito.</span>
+  </div>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a class="wa-float" data-wa data-msg="Oi! Vim pelo site e quero saber mais sobre o apê no [Bairro]." aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 32 32" width="30" height="30" fill="#fff"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.2 1.6 6L4 29l8.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-4.9 1 1-4.7-.3-.5c-1-1.6-1.5-3.4-1.5-5.3C4.9 9.4 9.9 4.9 16 4.9S27.1 9.4 27.1 15 22.1 24.8 16 24.8zm5.7-7.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.2 2.4 3.7 5.9 5.1.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.8-.7 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
+</a>
+
+<script src="script.js"></script>
+</body>
+</html>

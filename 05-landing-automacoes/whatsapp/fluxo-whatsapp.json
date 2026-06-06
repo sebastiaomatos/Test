@@ -1,0 +1,87 @@
+{
+  "fluxo": "AQV - Captação e Fechamento WhatsApp",
+  "versao": "1.0",
+  "variaveis": ["nome", "imovel", "metragem", "quartos", "condicao", "intencao", "pagamento", "data_hora", "prazo", "unidades", "novidade"],
+  "config": {
+    "janela_resposta_humana_min": 5,
+    "opt_out_keywords": ["parar", "sair", "cancelar", "não quero"]
+  },
+  "nodes": [
+    {
+      "id": "M0",
+      "tipo": "mensagem",
+      "atraso": "0min",
+      "texto": "Oi, {{nome}}! 👋 Aqui é da Imóveis AQV. Vi que você se interessou pelo {{imovel}} ({{metragem}}, {{quartos}} quartos, {{condicao}}). Você procura pra MORAR ou pra INVESTIR?",
+      "quick_replies": ["Morar", "Investir"],
+      "set": { "intencao": "{resposta}" },
+      "on_reply": "M1",
+      "on_no_reply": { "apos": "10min", "ir_para": "R1" }
+    },
+    {
+      "id": "M1",
+      "tipo": "mensagem",
+      "texto": "Show! E como você pretende comprar: FINANCIAMENTO ou À VISTA? (Se for financiamento, te ajudo a simular — muita gente usa o FGTS na entrada.)",
+      "quick_replies": ["Financiamento", "À vista", "Ainda não sei"],
+      "set": { "pagamento": "{resposta}" },
+      "on_reply": "M2"
+    },
+    {
+      "id": "M2",
+      "tipo": "mensagem",
+      "texto": "Perfeito, {{nome}}. Esse imóvel costuma sair rápido. Posso te mostrar pessoalmente? Fica melhor AMANHÃ À TARDE ou SÁBADO DE MANHÃ? 🗓️",
+      "quick_replies": ["Amanhã à tarde", "Sábado de manhã", "Outro horário"],
+      "on_reply": "M3",
+      "on_no_reply": { "apos": "1d", "ir_para": "R2" },
+      "acao": ["notificar_corretor", "pausar_automacao", "crm_estagio:Visita agendada", "evento:visita_agendada"]
+    },
+    {
+      "id": "M3",
+      "tipo": "mensagem",
+      "texto": "Combinado! Agendei pra {{data_hora}}. Vou te mandar o endereço e um lembrete no dia. Qualquer coisa, chama aqui. 🙌",
+      "fim": true
+    },
+    {
+      "id": "R1",
+      "tipo": "mensagem",
+      "atraso": "10min",
+      "texto": "Ah, {{nome}}, só pra você ver o porquê desse imóvel chamar atenção 👇",
+      "midia": "video_{{imovel}}",
+      "complemento": "Esse aqui tem saído rápido. Quer que eu segure uma simulação no seu nome?",
+      "on_reply": "M1",
+      "on_no_reply": { "apos": "2d", "ir_para": "R2" }
+    },
+    {
+      "id": "R2",
+      "tipo": "mensagem",
+      "atraso": "2d",
+      "texto": "{{nome}}, fiz uma simulação rápida: dá pra deixar a parcela parecida com um aluguel, usando o FGTS na entrada. 👀 Quer que eu te mande os números?",
+      "on_reply": "M2",
+      "on_no_reply": { "apos": "2d", "ir_para": "R3" }
+    },
+    {
+      "id": "R3",
+      "tipo": "mensagem",
+      "atraso": "4d",
+      "texto": "Passando pra avisar: a condição da entrada do {{imovel}} vai até {{prazo}}, e restam {{unidades}} unidades. Se ainda fizer sentido, me avisa que garanto a sua. 🔑",
+      "on_reply": "M2",
+      "on_no_reply": { "apos": "3d", "ir_para": "R4" }
+    },
+    {
+      "id": "R4",
+      "tipo": "mensagem",
+      "atraso": "7d",
+      "texto": "{{nome}}, não quero te encher 🙂 Se o {{imovel}} não foi o ideal, tenho outras 2 opções no mesmo perfil e faixa de preço. Quer que eu te mande?",
+      "on_reply": "M1",
+      "on_no_reply": { "apos": "8d", "ir_para": "R5" }
+    },
+    {
+      "id": "R5",
+      "tipo": "mensagem",
+      "atraso": "15d",
+      "repetir_em": "30d",
+      "texto": "Oi, {{nome}}! Surgiu uma novidade que combina com o que você procurava: {{novidade}}. Vale dar uma olhada? Posso te mandar o vídeo.",
+      "on_reply": "M1",
+      "on_no_reply": { "acao": ["crm_estagio:Frio", "campanha:Meta BOFU reengajamento"], "fim": true }
+    }
+  ]
+}
