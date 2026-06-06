@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<style>
+  @page { size:A4; margin:18mm 16mm 20mm 16mm;
+    @bottom-center{content:"PLAYBOOK DE MÍDIA PAGA · Sequências de Campanha para Imóveis"; font-family:Georgia,serif; font-size:8pt; color:#9a8b6a;}
+    @bottom-right{content:counter(page); font-family:Georgia,serif; font-size:9pt; color:#b08d3a;}
+  }
+  @page :first{ margin:0; @bottom-center{content:""} @bottom-right{content:""} }
+  *{box-sizing:border-box;} html{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  body{font-family:Georgia,'Times New Roman',serif; color:#2b2620; line-height:1.55; font-size:10.8pt; margin:0;}
+  h1,h2,h3,h4,.sans,th,td,.adcard,.kpi,.budget,.toc{font-family:'Helvetica Neue',Arial,sans-serif;}
+
+  /* cover */
+  .cover{height:297mm; position:relative; color:#f4eee2; padding:32mm 20mm; page-break-after:always;
+    background:linear-gradient(180deg,rgba(14,11,8,.55),rgba(14,11,8,.94)), url('img/cidade.jpg') center/cover;}
+  .cover .kick{font-family:'Helvetica Neue',sans-serif; letter-spacing:4px; font-size:11pt; color:#E0B84C; text-transform:uppercase;}
+  .cover h1{font-family:'Helvetica Neue',sans-serif; font-size:40pt; line-height:1.05; margin:12mm 0 5mm; font-weight:800;}
+  .cover h1 span{color:#E0B84C;}
+  .cover .sub{font-size:14pt; color:#e8e1d2; max-width:150mm; font-style:italic; font-family:Georgia,serif;}
+  .cover .badge{position:absolute; bottom:28mm; left:20mm; border-left:3px solid #E0B84C; padding-left:6mm;
+    font-family:'Helvetica Neue',sans-serif; font-size:10pt; color:#d8cdb6; line-height:1.7;}
+  .cover .tag{position:absolute; top:28mm; right:20mm; font-family:'Helvetica Neue',sans-serif; font-size:9pt;
+    letter-spacing:2px; color:#c9b88e; border:1px solid #6b5a33; padding:4px 12px; border-radius:20px;}
+
+  .part{page-break-before:always; height:235mm; display:flex; flex-direction:column; justify-content:center;
+    background:#14110E; color:#f4eee2; margin:-18mm -16mm; padding:38mm 22mm;}
+  .part .pnum{font-family:'Helvetica Neue',sans-serif; font-size:12pt; letter-spacing:5px; color:#E0B84C;}
+  .part h2{font-family:'Helvetica Neue',sans-serif; font-size:30pt; border:none; margin:5mm 0; color:#fff; line-height:1.1;}
+  .part p{color:#c7bda9; font-size:11.5pt; max-width:150mm;}
+
+  h2.sec{font-family:'Helvetica Neue',sans-serif; font-size:18pt; color:#1a1712; margin:0 0 1mm; page-break-before:always; page-break-after:avoid;}
+  .sectag{font-family:'Helvetica Neue',sans-serif; font-size:8.5pt; letter-spacing:3px; text-transform:uppercase;
+    color:#b08d3a; page-break-before:always; page-break-after:avoid; margin-top:1mm;}
+  h2.sec.cont, .sectag.cont{page-break-before:auto;}
+  h3{font-family:'Helvetica Neue',sans-serif; font-size:12.5pt; color:#2b2620; margin:6mm 0 2mm; page-break-after:avoid;}
+  h3::before{content:"▸ "; color:#b08d3a;}
+  p{margin:0 0 2.6mm; text-align:justify;}
+  .lead{font-size:11.5pt; color:#4a4234; font-style:italic; border-left:3px solid #d8b35a; padding:1mm 0 1mm 5mm; margin:3mm 0 5mm; text-align:left;}
+  strong{color:#1a1712;}
+
+  figure{margin:5mm 0; page-break-inside:avoid; text-align:center;}
+  figure img{width:100%; border-radius:6px; box-shadow:0 3px 12px rgba(0,0,0,.16);}
+  figcaption{font-family:'Helvetica Neue',sans-serif; font-size:8.3pt; color:#8a7d63; margin-top:1.5mm; font-style:italic;}
+
+  /* AD CARD */
+  .adcard{border:1px solid #e2d4ad; border-radius:10px; margin:5mm 0; page-break-inside:avoid; overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);}
+  .adhead{display:flex; align-items:center; gap:8px; padding:3mm 4mm; background:#14110E; color:#f4eee2;}
+  .adhead .plat{font-size:8pt; font-weight:700; letter-spacing:1px; padding:2px 8px; border-radius:4px; color:#14110E;}
+  .plat.meta{background:#5B8DB8;} .plat.google{background:#E0A93B;} .plat.yt{background:#C5524A; color:#fff;}
+  .plat.tt{background:#7FB7C9;} .plat.wa{background:#4CB286;} .plat.mail{background:#C58FBF;}
+  .adhead .num{font-size:13pt; font-weight:800; color:#E0B84C;}
+  .adhead .ti{font-size:11pt; font-weight:700;}
+  .adbody{display:flex; gap:4mm; padding:4mm;}
+  .adcreative{flex:0 0 42mm; text-align:center;}
+  .adcreative img{width:100%; border-radius:6px; border:1px solid #e7ddc7;}
+  .adcreative .cc{font-size:7.5pt; color:#8a7d63; margin-top:1mm; font-style:italic;}
+  .adfields{flex:1; font-size:8.8pt;}
+  .adfields table{width:100%; border-collapse:collapse;}
+  .adfields td{padding:1.4mm 2mm; border-bottom:1px solid #efe7d4; vertical-align:top;}
+  .adfields td.k{width:24mm; color:#9a6f17; font-weight:700; white-space:nowrap;}
+  .adfields .copy{background:#faf6ec; border-radius:5px; padding:1.5mm 2mm; margin-top:.5mm;}
+  .adfields .cta{display:inline-block; background:#4CB286; color:#fff; font-weight:700; padding:1px 7px; border-radius:4px; font-size:8pt;}
+
+  table.std{width:100%; border-collapse:collapse; margin:4mm 0; font-size:8.8pt; page-break-inside:avoid;}
+  table.std th{background:#2b2620; color:#f4eee2; text-align:left; padding:2mm 2.5mm; font-size:8.5pt;}
+  table.std td{padding:2mm 2.5mm; border-bottom:1px solid #e7ddc7; vertical-align:top;}
+  table.std tr:nth-child(even) td{background:#faf6ec;}
+  .callout{background:#faf5e9; border:1px solid #e6d29a; border-left:5px solid #d8b35a; border-radius:6px; padding:4mm 5mm; margin:4mm 0; page-break-inside:avoid; font-size:9.6pt;}
+  .callout .ct{font-family:'Helvetica Neue',sans-serif; font-weight:700; color:#9a6f17; font-size:9pt; letter-spacing:1px; text-transform:uppercase; margin-bottom:1mm;}
+  .callout.dark{background:#14110E; border-color:#3a3026; border-left-color:#E0B84C; color:#ece4d2;}
+  .callout.dark .ct{color:#E0B84C;} .callout.dark strong{color:#fff;}
+  ul.clean{list-style:none; padding-left:0; font-size:9.6pt;} ul.clean li{padding:1mm 0 1mm 7mm; position:relative; text-align:left;}
+  ul.clean li::before{content:"✓"; color:#4CB286; font-weight:bold; position:absolute; left:0;}
+  .toc{font-family:'Helvetica Neue',sans-serif;} .toc h2{font-size:20pt; color:#1a1712; border-bottom:2px solid #d8b35a; padding-bottom:2mm;}
+  .toc .row{display:flex; justify-content:space-between; font-size:10.5pt; padding:2.2mm 0; border-bottom:1px dotted #d9ccaf;}
+  .toc b{color:#b08d3a; margin-right:3mm;}
+  .grid2{display:flex; gap:4mm;} .grid2>div{flex:1;}
+  .small{font-size:8.6pt; color:#6a6151;}
+</style></head><body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="tag">ESTRATÉGIA · TRÁFEGO PAGO · IMÓVEIS</div>
+  <div class="kick">Plano de mídia full-funnel</div>
+  <h1>PLAYBOOK DE<br>CAMPANHAS <span>PAGAS</span></h1>
+  <div class="sub">As sequências de anúncios, plataforma por plataforma, para gerar leads de qualidade baratos e em escala — e transformar atendimento em venda.</div>
+  <div class="badge">
+    Meta · Google · YouTube · TikTok &nbsp;+&nbsp; WhatsApp & E-mail automáticos<br>
+    Organogramas, públicos exatos, copy, criativos, orçamento e KPIs<br>
+    <span style="color:#E0B84C">Inteligência unificada: corretor + marketeiro + gestor de tráfego</span>
+  </div>
+</div>
+
+<!-- SUMÁRIO -->
+<div class="toc">
+  <h2>Como ler este playbook</h2>
+  <p class="small" style="margin-bottom:5mm;">Cada anúncio é apresentado como um <strong>card operacional</strong>: tudo o que o gestor precisa para subir a campanha está ali — plataforma, objetivo, público exato, copy, criativo de exemplo, orçamento e link de destino. Os organogramas mostram a ordem e como as peças se alimentam.</p>
+  <div class="row"><span><b>0.</b> Fundação: rastreamento, CRM, nomenclatura e metas</span><span>A base de tudo</span></div>
+  <div class="row"><span><b>I.</b> O mapa geral — a máquina completa</span><span>Organograma mestre</span></div>
+  <div class="row"><span><b>II.</b> Aquisição — Meta Ads (4 cards)</span><span>Lead barato em escala</span></div>
+  <div class="row"><span><b>III.</b> Aquisição — Google & TikTok (3 cards)</span><span>Intenção + volume</span></div>
+  <div class="row"><span><b>IV.</b> Nutrição & Retargeting (3 cards)</span><span>Reaquecer e converter</span></div>
+  <div class="row"><span><b>V.</b> Conversão — fechamento dos atendimentos atuais</span><span>BOFU + automações</span></div>
+  <div class="row"><span><b>VI.</b> WhatsApp & E-mail automáticos</span><span>Acelerar fechamento</span></div>
+  <div class="row"><span><b>VII.</b> Escala de qualidade — Lookalike & otimização</span><span>Baratear o CPL</span></div>
+  <div class="row"><span><b>VIII.</b> Orçamento, cronograma 30/60/90 e KPIs</span><span>Operação</span></div>
+</div>
+
+<!-- SEÇÃO 0 FUNDAÇÃO -->
+<div class="sectag">Seção 0</div>
+<h2 class="sec cont">Fundação: sem isto, todo o resto vira desperdício</h2>
+<p class="lead">O segredo de um lead barato não está no criativo — está em <strong>medir a coisa certa</strong>. Se o algoritmo não souber quem virou conversa e quem virou venda, ele vai otimizar para curiosos. A fundação abaixo é inegociável.</p>
+
+<h3>1. Rastreamento de ponta a ponta</h3>
+<p>Instale o <strong>Pixel da Meta</strong> e a <strong>Conversions API (CAPI)</strong> para enviar o evento de “conversa iniciada” e os eventos de qualificação. No Google, ative o <strong>Google Tag + Conversões Otimizadas</strong>. O evento mais importante não é o clique: é a <strong>conversa qualificada</strong> e a <strong>venda</strong>. Esses eventos voltam para as plataformas como conversão e são a base do Lookalike (Seção VII).</p>
+
+<h3>2. CRM com estágios claros</h3>
+<p>Todo lead entra num CRM (RD Station, Kommo, HubSpot ou similar) com estágios: <em>Novo → Conversa iniciada → Qualificado → Visita agendada → Proposta → Venda/Perdido</em>. Esses estágios viram <strong>eventos offline</strong> enviados de volta ao Meta/Google — é assim que o algoritmo aprende a buscar quem fecha, não quem só clica.</p>
+
+<h3>3. Nomenclatura padrão (para nunca se perder)</h3>
+<div class="callout">
+  <div class="ct">Padrão de nomes</div>
+  <p style="margin:0;"><strong>Campanha:</strong> <code>AQV | [Plataforma] | [Objetivo] | [Etapa] | [Praça]</code><br>
+  <strong>Conjunto:</strong> <code>[Público] | [Região] | [Faixa]</code><br>
+  <strong>Anúncio:</strong> <code>[Formato] | [Imóvel/Oferta] | [v1]</code><br>
+  Ex.: <code>AQV | Meta | Mensagens | TOFU | Maceió</code> › <code>Advantage+ | Raio 20km | 28-55</code> › <code>Reels | FrenteMar | v1</code></p>
+</div>
+
+<h3>4. Metas (KPIs) que guiam a régua</h3>
+<p>Os números variam por praça e ticket, mas estas são as faixas-alvo que perseguimos. Use-as como semáforo, não como dogma.</p>
+<table class="std">
+  <tr><th>Indicador</th><th>Faixa-alvo de referência</th><th>Por que importa</th></tr>
+  <tr><td>Custo por lead (CPL)</td><td>R$ 4 – R$ 15 (MCMV) · R$ 15 – R$ 50 (médio/alto)</td><td>Volume barato</td></tr>
+  <tr><td>Custo por conversa qualificada</td><td>R$ 25 – R$ 90</td><td>Qualidade do lead</td></tr>
+  <tr><td>Custo por visita agendada</td><td>R$ 120 – R$ 400</td><td>Proximidade da venda</td></tr>
+  <tr><td>Lead → Visita</td><td>15% – 30%</td><td>Eficiência do atendimento</td></tr>
+  <tr><td>Visita → Proposta</td><td>30% – 50%</td><td>Conversão</td></tr>
+  <tr><td>Proposta → Venda</td><td>30% – 60%</td><td>Fechamento</td></tr>
+</table>
+
+<!-- PARTE I MAPA -->
+<div class="part">
+  <div class="pnum">PARTE I</div>
+  <h2>O mapa geral —<br>a máquina completa</h2>
+  <p>Antes dos detalhes, veja o todo. Quatro camadas, várias plataformas, uma engenharia de dados no centro. Cada camada existe para um objetivo específico — e todas se alimentam de volta para baratear o lead a cada mês.</p>
+</div>
+
+<figure><img src="img/M1_mapa_geral.png" alt="Mapa geral"><figcaption>A máquina completa: da aquisição fria à escala via Lookalike, com a alça de dados realimentando o topo.</figcaption></figure>
+<figure><img src="img/M6_engine_dados.png" alt="Engine de dados"><figcaption>A engine de dados que sustenta tudo. É ela que transforma “cliques” em “compradores” aos olhos do algoritmo.</figcaption></figure>
+
+<!-- PARTE II META -->
+<div class="part">
+  <div class="pnum">PARTE II</div>
+  <h2>Aquisição<br>Meta Ads</h2>
+  <p>O Meta (Instagram + Facebook) é o motor de volume barato. Aqui rodamos o Marketing de Intenção: criativos que filtram, públicos amplos guiados pelo criativo, e clique direto para o WhatsApp. É onde a maior parte dos leads nasce.</p>
+</div>
+
+<figure><img src="img/M2_sequencia_meta.png" alt="Sequência Meta"><figcaption>A sequência Meta de ponta a ponta. Os cards a seguir detalham cada peça.</figcaption></figure>
+
+<!-- CARD 1 -->
+<div class="adcard">
+  <div class="adhead"><span class="num">01</span><span class="plat meta">META ADS</span><span class="ti">CTWA Frio · Alto padrão / Frente-mar (Reels + Story)</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr01_meta_reels.jpg"><div class="cc">Reels/Story 9:16 — tour do imóvel</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Meta | Mensagens | TOFU | [Praça]</code></td></tr>
+      <tr><td class="k">Objetivo</td><td>Engajamento → <strong>Mensagens (WhatsApp)</strong> (otimizar p/ conversas iniciadas)</td></tr>
+      <tr><td class="k">Tipo</td><td>Vídeo vertical (Reels/Stories) + Feed · Click-to-WhatsApp</td></tr>
+      <tr><td class="k">Público</td><td><strong>Advantage+</strong> (amplo) · raio 20–30 km do imóvel <em>ou</em> estado/Brasil p/ investimento · 30–60 anos · <strong>excluir</strong> leads e clientes atuais</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Título:</strong> “Cobertura frente-mar, pronta pra morar.”<br><strong>Texto:</strong> “3 suítes, 2 vagas e vista permanente no [bairro]. R$ 1,2 mi, aceita financiamento. Quer ver por dentro? Chama no WhatsApp.”<br><strong>CTA:</strong> <span class="cta">Enviar mensagem</span></div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 60/dia</strong> (validação) → escalar 20%/3 dias se CPL ok</td></tr>
+      <tr><td class="k">Destino</td><td>WhatsApp com texto pré-preenchido: “Oi! Vim pelo anúncio da cobertura frente-mar.”</td></tr>
+      <tr><td class="k">KPI</td><td>Custo/conversa &lt; R$ 70 · taxa de resposta &gt; 60%</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- CARD 2 -->
+<div class="adcard">
+  <div class="adhead"><span class="num">02</span><span class="plat meta">META ADS</span><span class="ti">CTWA Frio · Médio padrão / Oportunidade de preço (Feed)</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr02_meta_feed.jpg"><div class="cc">Feed 1:1 — preço em destaque</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Meta | Mensagens | TOFU | [Praça]</code></td></tr>
+      <tr><td class="k">Objetivo</td><td>Mensagens (WhatsApp) · conjunto separado por <strong>motivação “sair do aluguel/upgrade”</strong></td></tr>
+      <tr><td class="k">Tipo</td><td>Imagem/Vídeo Feed + Reels · Click-to-WhatsApp</td></tr>
+      <tr><td class="k">Público</td><td>Advantage+ · raio 15–25 km · 28–50 anos · interesses amplos (deixe o criativo filtrar)</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Título:</strong> “2 quartos no [bairro] — R$ 389.000, pronto pra morar.”<br><strong>Texto:</strong> “Financia pela Caixa e usa o FGTS na entrada. Saia do aluguel ainda este ano. Me chama que te explico a condição.”<br><strong>CTA:</strong> <span class="cta">Enviar mensagem</span></div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 50/dia</strong></td></tr>
+      <tr><td class="k">Destino</td><td>WhatsApp pré-preenchido com o nome do empreendimento</td></tr>
+      <tr><td class="k">KPI</td><td>CPL &lt; R$ 12 · custo/conversa qualificada &lt; R$ 60</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- CARD 3 -->
+<div class="adcard">
+  <div class="adhead"><span class="num">03</span><span class="plat meta">META ADS</span><span class="ti">Lead Ads (Instant Form) · MCMV / volume</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr03_leadform.jpg"><div class="cc">Formulário instantâneo</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Meta | Leads | TOFU | [Praça]</code></td></tr>
+      <tr><td class="k">Objetivo</td><td>Cadastros (Lead) · formulário de <strong>maior intenção</strong> (com perguntas)</td></tr>
+      <tr><td class="k">Tipo</td><td>Vídeo/Imagem → <strong>Formulário instantâneo</strong> (não sai do app)</td></tr>
+      <tr><td class="k">Público</td><td>Advantage+ · raio 20 km · interesses: imóveis, MCMV · <strong>Lookalike 1–3%</strong> de compradores (quando houver base)</td></tr>
+      <tr><td class="k">Form</td><td>Nome · WhatsApp · Renda familiar · “Tem FGTS / 8+ anos de carteira?” (qualifica de saída)</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Título:</strong> “Saia do aluguel: simule seu financiamento em 2 min.”<br><strong>CTA:</strong> <span class="cta">Saiba mais</span> · botão do form: “Quero simular”</div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 40/dia</strong></td></tr>
+      <tr><td class="k">Destino</td><td>Lead → CRM → <strong>disparo automático de WhatsApp em &lt; 5 min</strong> (Seção VI)</td></tr>
+      <tr><td class="k">KPI</td><td>CPL &lt; R$ 8 · % lead que responde 1º WhatsApp &gt; 40%</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- CARD 10 investidor -->
+<div class="adcard">
+  <div class="adhead"><span class="num">04</span><span class="plat meta">META ADS</span><span class="ti">CTWA Frio · Investidor / Renda de temporada</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr10_investidor.jpg"><div class="cc">Feed — recorte investidor</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Meta | Mensagens | TOFU | Investidor</code></td></tr>
+      <tr><td class="k">Objetivo</td><td>Mensagens · conjunto com <strong>motivação “renda/valorização”</strong></td></tr>
+      <tr><td class="k">Público</td><td><strong>Brasil inteiro</strong> (não restringir à praça) · 30–60 anos · interesses: investimentos, imóveis na planta, renda passiva</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Título:</strong> “Studio frente-mar para renda de temporada.”<br><strong>Texto:</strong> “O aluguel paga a parcela. Receba o estudo de rentabilidade da unidade. Chama no WhatsApp.”<br><strong>CTA:</strong> <span class="cta">Enviar mensagem</span></div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 40/dia</strong></td></tr>
+      <tr><td class="k">Destino</td><td>WhatsApp → enviar PDF do estudo de rentabilidade (isca)</td></tr>
+      <tr><td class="k">KPI</td><td>Custo/conversa &lt; R$ 90 (ticket alto justifica)</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- PARTE III GOOGLE + TIKTOK -->
+<div class="part">
+  <div class="pnum">PARTE III</div>
+  <h2>Aquisição<br>Google & TikTok</h2>
+  <p>O Google captura quem <em>já está procurando</em> imóvel agora — a demanda mais quente que existe. O TikTok abre um oceano de leads jovens e baratos para o MCMV. Juntos, complementam o volume do Meta com intenção e alcance.</p>
+</div>
+
+<figure><img src="img/M3_sequencia_google.png" alt="Sequência Google"><figcaption>Os três trilhos do Google convergindo para uma landing rápida + WhatsApp.</figcaption></figure>
+
+<!-- CARD GOOGLE SEARCH -->
+<div class="adcard">
+  <div class="adhead"><span class="num">05</span><span class="plat google">GOOGLE</span><span class="ti">Search · Alta intenção (fundo de funil “quente”)</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr04_google_search.jpg"><div class="cc">Anúncio de pesquisa (RSA)</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Google | Search | BOFU | [Cidade]</code></td></tr>
+      <tr><td class="k">Tipo</td><td>Rede de Pesquisa · Anúncio responsivo (RSA) + extensões</td></tr>
+      <tr><td class="k">Palavras</td><td>“apartamento 2 quartos [bairro]”, “imóvel à venda [cidade] financiamento”, “apartamento frente-mar [cidade]”, “[empreendimento]”</td></tr>
+      <tr><td class="k">Negativas</td><td><strong>aluguel, alugar, planta baixa, decoração, vagas de emprego, curso, como vender</strong></td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Títulos:</strong> “Apartamento 2 Quartos em [Cidade]” · “A partir de R$ 389 mil” · “Financia + usa FGTS” · “Visita no mesmo dia”<br><strong>Descrição:</strong> “Pronto pra morar, sem burocracia. Fale no WhatsApp e agende sua visita hoje.”<br><strong>CTA/Extensões:</strong> Sitelinks (Simular · Ver unidades · WhatsApp)</div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 50/dia</strong> · lances: Maximizar conversões</td></tr>
+      <tr><td class="k">Destino</td><td>Landing rápida do empreendimento com botão de WhatsApp + form curto</td></tr>
+      <tr><td class="k">KPI</td><td>Custo/conversão &lt; R$ 60 · CTR &gt; 6%</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- CARD PMAX -->
+<div class="adcard">
+  <div class="adhead"><span class="num">06</span><span class="plat google">GOOGLE</span><span class="ti">Performance Max · escala multi-rede</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr09_lookalike.jpg"><div class="cc">Assets reaproveitam a biblioteca de criativos</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Google | PMax | Escala | [Cidade]</code></td></tr>
+      <tr><td class="k">Tipo</td><td>Performance Max · 1 <strong>asset group por empreendimento</strong> (vídeos, imagens, títulos, descrições)</td></tr>
+      <tr><td class="k">Sinais de público</td><td>Lista de clientes/leads (match) + “interessados em imóveis” + quem visitou a landing — como <em>sinal</em>, não trava</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy">Reaproveite títulos/descrições do Search + 5 imagens + 1 vídeo vertical do imóvel por empreendimento.</div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 50/dia</strong> (ligar após Search validado — Fase 2)</td></tr>
+      <tr><td class="k">Destino</td><td>Mesma landing + WhatsApp · conversão = lead/WhatsApp</td></tr>
+      <tr><td class="k">KPI</td><td>Custo/conversão ≤ Search · vigiar qualidade do lead (PMax tende a inflar volume)</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- CARD TIKTOK -->
+<div class="adcard">
+  <div class="adhead"><span class="num">07</span><span class="plat tt">TIKTOK</span><span class="ti">Frio · MCMV / público jovem (volume barato)</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr07_tiktok.jpg"><div class="cc">Vídeo nativo 9:16</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | TikTok | Leads | TOFU | MCMV</code></td></tr>
+      <tr><td class="k">Objetivo</td><td>Geração de leads (form nativo) ou tráfego para WhatsApp</td></tr>
+      <tr><td class="k">Tipo</td><td>Vídeo nativo (estética “sem produção”), legenda grande, trend de áudio</td></tr>
+      <tr><td class="k">Público</td><td>Região (raio) · 22–40 anos · amplo (algoritmo do TikTok otimiza rápido)</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Gancho na tela:</strong> “Saiu do aluguel aos 26 👀 olha o apê novo”<br><strong>Texto:</strong> “Entrada facilitada, financia pela Caixa. Comenta ‘QUERO’ que eu te chamo.”<br><strong>CTA:</strong> <span class="cta">Saiba mais</span></div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 40/dia</strong> (Fase 2 — após Meta validado)</td></tr>
+      <tr><td class="k">Destino</td><td>Form nativo → CRM → WhatsApp automático</td></tr>
+      <tr><td class="k">KPI</td><td>CPL &lt; R$ 6 · atenção à qualidade (qualificar forte no WhatsApp)</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- PARTE IV NUTRIÇÃO -->
+<div class="part">
+  <div class="pnum">PARTE IV</div>
+  <h2>Nutrição &<br>Retargeting</h2>
+  <p>Pouca gente compra no primeiro toque. O retargeting reapresenta prova e quebra objeções para quem já demonstrou interesse — é o tráfego mais barato e mais rentável do funil, porque fala com quem já te conhece.</p>
+</div>
+
+<!-- CARD RMKT CARROSSEL -->
+<div class="adcard">
+  <div class="adhead"><span class="num">08</span><span class="plat meta">META ADS</span><span class="ti">Retargeting · Prova social (Carrossel)</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr06_carrossel.jpg"><div class="cc">Carrossel de provas/depoimentos</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Meta | Mensagens | RMKT | Prova</code></td></tr>
+      <tr><td class="k">Público</td><td><strong>Custom Audiences:</strong> viu 50–75% dos vídeos (30–90d) · engajou no perfil IG/FB · clicou e não respondeu · visitou a landing — <strong>excluir</strong> quem já é atendimento ativo</td></tr>
+      <tr><td class="k">Tipo</td><td>Carrossel: cada card uma prova (venda real, “financiou em 5 dias”, depoimento)</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Texto:</strong> “Você viu o apê e sumiu? 😅 Olha quem já fechou com a gente. Bora tirar suas dúvidas?”<br><strong>CTA:</strong> <span class="cta">Enviar mensagem</span></div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 25/dia</strong></td></tr>
+      <tr><td class="k">Destino</td><td>WhatsApp · objetivo: reabrir conversa</td></tr>
+      <tr><td class="k">KPI</td><td>Frequência &lt; 3/semana · custo/conversa &lt; metade do frio</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- CARD YOUTUBE -->
+<div class="adcard">
+  <div class="adhead"><span class="num">09</span><span class="plat yt">YOUTUBE</span><span class="ti">Demand Gen / YouTube · Retargeting em vídeo</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr05_youtube.jpg"><div class="cc">In-stream / Shorts</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Google | DemandGen | RMKT | Vídeo</code></td></tr>
+      <tr><td class="k">Público</td><td>Visitantes da landing (lista) + interagiu no canal · semelhantes a quem converteu</td></tr>
+      <tr><td class="k">Tipo</td><td>In-stream pulável + Shorts · vídeo curto do imóvel com legenda</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Gancho (3s):</strong> “Ainda pensando naquele apê? Olha por dentro.”<br><strong>CTA:</strong> <span class="cta">Falar no WhatsApp</span></div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 30/dia</strong> (Fase 2)</td></tr>
+      <tr><td class="k">Destino</td><td>Landing + WhatsApp</td></tr>
+      <tr><td class="k">KPI</td><td>CPV baixo · assistência à conversão (mede via lift, não último clique)</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- CARD BOFU urgencia -->
+<div class="adcard">
+  <div class="adhead"><span class="num">10</span><span class="plat meta">META ADS</span><span class="ti">BOFU · Urgência para atendimentos atuais (lista CRM)</span></div>
+  <div class="adbody">
+    <div class="adcreative"><img src="creatives/cr08_bofu_urgencia.jpg"><div class="cc">Story — escassez real</div></div>
+    <div class="adfields"><table>
+      <tr><td class="k">Campanha</td><td><code>AQV | Meta | Mensagens | BOFU | Fechamento</code></td></tr>
+      <tr><td class="k">Público</td><td><strong>Lista do CRM</strong> (upload): estágios “Qualificado / Visita agendada / Proposta” · quem parou de responder há 2–10 dias</td></tr>
+      <tr><td class="k">Tipo</td><td>Story/Reels de <strong>escassez real</strong> (últimas unidades, condição com prazo)</td></tr>
+      <tr><td class="k">Copy</td><td><div class="copy"><strong>Título:</strong> “Últimas unidades — condição da entrada termina sexta.”<br><strong>Texto:</strong> “Você chegou a ver o [imóvel]. Garanto sua simulação hoje. Me chama.”<br><strong>CTA:</strong> <span class="cta">Enviar mensagem</span></div></td></tr>
+      <tr><td class="k">Orçamento</td><td><strong>R$ 20/dia</strong></td></tr>
+      <tr><td class="k">Destino</td><td>WhatsApp do corretor que já atende o lead (continuidade)</td></tr>
+      <tr><td class="k">KPI</td><td>Reativação de conversa &gt; 20% · acelera dias até o fechamento</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<!-- PARTE V/VI AUTOMACOES -->
+<div class="part">
+  <div class="pnum">PARTE V & VI</div>
+  <h2>Fechamento:<br>WhatsApp & E-mail<br>automáticos</h2>
+  <p>O tráfego entrega a conversa; as automações fecham. Aqui estão as duas sequências que aceleram o tempo de fechamento e elevam a taxa de conversão dos atendimentos atuais — respondendo na hora, qualificando, provando e criando urgência sem você precisar lembrar de cada lead.</p>
+</div>
+
+<div class="sectag cont">Automação 1</div>
+<h2 class="sec cont">Fluxo de WhatsApp automático</h2>
+<p class="lead">Lead de tráfego pago esfria em minutos. Esta régua dispara sozinha (via ManyChat/360dialog/CRM), garante a resposta em &lt; 5 min e conduz o lead da curiosidade até a visita — recuperando quem some.</p>
+<figure><img src="img/M4_fluxo_whatsapp.png" alt="Fluxo WhatsApp"><figcaption>A régua de relacionamento no WhatsApp, do minuto zero à reativação.</figcaption></figure>
+
+<div class="callout dark">
+  <div class="ct">Mensagem de abertura (gatilho imediato)</div>
+  <p style="margin:0;">“Oi, [nome]! Vi que você se interessou pelo [imóvel]. Ele tem [metragem], [quartos] e está [condição]. Você procura para <strong>morar</strong> ou <strong>investir</strong>? E pretende <strong>financiar</strong> ou <strong>à vista</strong>? Assim já te mostro o que faz mais sentido. 👇”</p>
+</div>
+<p>As duas perguntas (intenção + capacidade) qualificam de saída. Quem responde entra para o corretor; quem não responde em 10 min recebe o reforço com prova, e assim por diante na régua do diagrama. A oferta de visita sempre vem com <strong>dois horários fechados</strong> (“amanhã à tarde ou sábado de manhã?”) para facilitar o sim.</p>
+
+<div class="sectag">Automação 2</div>
+<h2 class="sec cont">Sequência de e-mail (nutrição)</h2>
+<p class="lead">Para os leads que deixaram e-mail (Lead Ads e landing), o e-mail constrói desejo e autoridade em paralelo ao WhatsApp — e reativa quem esfriou, a custo praticamente zero.</p>
+<figure><img src="img/M5_sequencia_email.png" alt="Sequência email"><figcaption>Seis e-mails que levam o lead da curiosidade à visita, com prova e escassez.</figcaption></figure>
+<p>A lógica espelha a VSL: <strong>história e prova</strong> (E2), <strong>conteúdo útil</strong> que gera reciprocidade (E3 — passo a passo do financiamento), <strong>oferta com o imóvel do ICP</strong> (E4), <strong>escassez</strong> (E5) e <strong>reativação</strong> (E6). Cada e-mail tem um único CTA: voltar para a conversa no WhatsApp.</p>
+
+<!-- PARTE VII ESCALA -->
+<div class="part">
+  <div class="pnum">PARTE VII</div>
+  <h2>Escala de<br>qualidade</h2>
+  <p>Escalar não é só aumentar verba — é ensinar o algoritmo a achar mais gente parecida com quem já comprou. É assim que o custo por lead cai e a qualidade sobe ao mesmo tempo.</p>
+</div>
+
+<div class="sectag cont">Seção VII</div>
+<h2 class="sec cont">Lookalike e otimização contínua</h2>
+<p>Com a engine de dados (Seção 0) enviando eventos de <strong>venda</strong> e <strong>conversa qualificada</strong> de volta ao Meta e ao Google, você constrói os públicos mais valiosos que existem:</p>
+<ul class="clean">
+  <li><strong>Lookalike 1% de compradores</strong> — semelhantes a quem efetivamente fechou. O lead mais qualificado e barato no médio prazo.</li>
+  <li><strong>Lookalike 1–3% de conversas qualificadas</strong> — maior volume, ótima qualidade, alimenta o topo (card 03 e novos conjuntos frios).</li>
+  <li><strong>Advantage+ / CBO com os criativos vencedores</strong> — concentre verba nos 3 anúncios de melhor custo por conversa e deixe a IA distribuir.</li>
+  <li><strong>Google: lances por valor</strong> — quando o CRM devolve a venda como conversão, migre para “Maximizar valor de conversão”.</li>
+</ul>
+<div class="callout">
+  <div class="ct">A regra da escala saudável</div>
+  <p style="margin:0;">Aumente o orçamento de uma campanha vencedora em <strong>~20% a cada 3 dias</strong> — subidas bruscas reiniciam o aprendizado e encarecem o lead. Duplique o que funciona em vez de inflar tudo de uma vez. E mantenha sempre 2–3 criativos novos em teste para combater a fadiga.</p>
+</div>
+
+<!-- PARTE VIII ORCAMENTO -->
+<div class="sectag">Seção VIII</div>
+<h2 class="sec cont">Orçamento, cronograma e KPIs</h2>
+<p class="lead">Um plano só é bom se couber no caixa e tiver uma régua de decisão. Abaixo, a alocação por fase e o cronograma 30/60/90 para sair do zero à escala sem queimar dinheiro.</p>
+
+<h3>Alocação de orçamento por fase</h3>
+<table class="std">
+  <tr><th>Campanha</th><th>Plataforma</th><th>Fase 1 · Validar (mês 1)</th><th>Fase 2 · Escalar (mês 2-3)</th></tr>
+  <tr><td>CTWA Frio (cards 01,02,04)</td><td>Meta</td><td>R$ 150/dia</td><td>R$ 300/dia</td></tr>
+  <tr><td>Lead Ads MCMV (card 03)</td><td>Meta</td><td>R$ 40/dia</td><td>R$ 80/dia</td></tr>
+  <tr><td>Search alta intenção (05)</td><td>Google</td><td>R$ 50/dia</td><td>R$ 80/dia</td></tr>
+  <tr><td>Retargeting (08, 09)</td><td>Meta/YouTube</td><td>R$ 25/dia</td><td>R$ 60/dia</td></tr>
+  <tr><td>BOFU fechamento (10)</td><td>Meta</td><td>R$ 20/dia</td><td>R$ 30/dia</td></tr>
+  <tr><td>Performance Max (06)</td><td>Google</td><td>—</td><td>R$ 50/dia</td></tr>
+  <tr><td>TikTok MCMV (07)</td><td>TikTok</td><td>—</td><td>R$ 40/dia</td></tr>
+  <tr><td>Lookalike escala</td><td>Meta</td><td>—</td><td>R$ 60/dia</td></tr>
+  <tr><td style="font-weight:700;">TOTAL aproximado</td><td></td><td style="font-weight:700;">~R$ 285/dia · ~R$ 8,5 mil/mês</td><td style="font-weight:700;">~R$ 700/dia · ~R$ 21 mil/mês</td></tr>
+</table>
+<p class="small">Comece no piso (a partir de R$ 100–150/dia já roda). A regra é só escalar verba quando o CPL e o custo por conversa qualificada estiverem dentro da meta da Seção 0. Verba grande sobre criativo ruim apenas perde dinheiro mais rápido.</p>
+
+<h3>Cronograma 30 / 60 / 90 dias</h3>
+<table class="std">
+  <tr><th>Período</th><th>Foco</th><th>Entregas</th></tr>
+  <tr><td><strong>Dias 1–10</strong></td><td>Fundação</td><td>Pixel + CAPI + CRM + nomenclatura · 1 landing rápida · 3–5 criativos por imóvel</td></tr>
+  <tr><td><strong>Dias 10–30</strong></td><td>Validar aquisição</td><td>Subir cards 01–03 e 05 · WhatsApp automático ligado · achar 2–3 criativos vencedores</td></tr>
+  <tr><td><strong>Dias 30–60</strong></td><td>Retargeting + dados</td><td>Ligar cards 08–10 · eventos offline do CRM · 1ª base de Lookalike</td></tr>
+  <tr><td><strong>Dias 60–90</strong></td><td>Escalar qualidade</td><td>Lookalike de compradores · PMax + TikTok · escalar verba 20%/3 dias · e-mail nutrição</td></tr>
+</table>
+
+<div class="callout dark" style="margin-top:8mm;">
+  <div class="ct">O playbook em uma frase</div>
+  <p style="margin:0; font-size:11.5pt;">Atraia com <strong>Meta + Google</strong> usando criativos que filtram, capture no <strong>WhatsApp</strong>, qualifique e feche com <strong>automações</strong>, reimpacte com <strong>retargeting</strong> e, com os dados de venda voltando via <strong>CAPI</strong>, ensine o algoritmo a caçar mais compradores no <strong>Lookalike</strong>. O lead fica mais barato, o atendimento fica mais rápido, e a venda vira sistema.</p>
+</div>
+
+<p style="text-align:center; margin-top:8mm; font-family:'Helvetica Neue',sans-serif; color:#9a8b6a; font-size:9pt;">
+— Fim do playbook —<br>
+<span style="font-size:8.3pt;">Sequências, públicos, copy e orçamentos são pontos de partida de elite; calibre com os dados da sua praça.<br>
+Criativos de exemplo gerados para ilustração. Fotos sob licença Creative Commons (Openverse). Organogramas de produção própria.</span>
+</p>
+
+</body></html>
