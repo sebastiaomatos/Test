@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  @page {
+    size: A4; margin: 20mm 16mm 18mm 16mm;
+    @bottom-center { content: "Engenharia Reversa — Fisgar  ·  pág. " counter(page) " / " counter(pages); font-size: 8.5pt; color: #6b7280; }
+    @bottom-right { content: "Confidencial — análise técnica"; font-size: 8pt; color: #9aa3af; }
+  }
+  @page :first { margin: 0; @bottom-center { content: ""; } @bottom-right { content: ""; } }
+  * { box-sizing: border-box; }
+  body { font-family: "Helvetica Neue", Arial, sans-serif; color: #1f2933; font-size: 10.5pt; line-height: 1.5; }
+  h1,h2,h3,h4 { color: #0f2742; line-height: 1.2; }
+  h2 { font-size: 16pt; border-bottom: 3px solid #1f6feb; padding-bottom: 4px; margin-top: 6px; }
+  h3 { font-size: 12.5pt; color: #1f6feb; margin-bottom: 2px; }
+  h4 { font-size: 11pt; color: #0e7c86; margin-bottom: 2px; }
+  p { margin: 6px 0; text-align: justify; }
+  a { color: #1f6feb; text-decoration: none; }
+  .section { page-break-before: always; }
+  img.fig { width: 100%; border: 1px solid #d6dee8; border-radius: 6px; margin: 8px 0 2px; }
+  .cap { font-size: 8.5pt; color: #6b7280; margin: 0 0 10px; font-style: italic; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 9pt; }
+  th { background: #0f2742; color: #fff; padding: 6px 7px; text-align: left; font-weight: 600; }
+  td { padding: 5px 7px; border-bottom: 1px solid #e3e8ef; vertical-align: top; }
+  tr:nth-child(even) td { background: #f6f9fc; }
+  .legal-ok { color: #1a7f37; font-weight: 700; }
+  .legal-grey { color: #b8860b; font-weight: 700; }
+  .legal-no { color: #b3261e; font-weight: 700; }
+  .callout { border-left: 4px solid #1f6feb; background: #eef4fd; padding: 8px 12px; margin: 10px 0; border-radius: 0 6px 6px 0; }
+  .warn { border-left: 4px solid #b3261e; background: #fdeceb; padding: 8px 12px; margin: 10px 0; border-radius: 0 6px 6px 0; }
+  .ok { border-left: 4px solid #1a7f37; background: #ecf7ef; padding: 8px 12px; margin: 10px 0; border-radius: 0 6px 6px 0; }
+  .pill { display:inline-block; background:#1f6feb; color:#fff; border-radius:10px; padding:1px 8px; font-size:8pt; font-weight:600; }
+  ul { margin: 4px 0 8px; padding-left: 18px; } li { margin: 2px 0; }
+  .grid2 { display: flex; gap: 12px; } .grid2 > div { flex: 1; }
+  .kpi { background:#f6f9fc; border:1px solid #d6dee8; border-radius:6px; padding:8px 10px; margin:4px 0; }
+  .kpi b { color:#0f2742; }
+  code { background:#eef2f7; padding:1px 4px; border-radius:3px; font-size:9pt; }
+  .small { font-size: 8.5pt; color:#6b7280; }
+  /* Cover */
+  .cover { height: 297mm; background: linear-gradient(150deg,#0f2742 0%, #143a63 55%, #1f6feb 100%); color:#fff; padding: 38mm 22mm; position: relative; }
+  .cover h1 { color:#fff; font-size: 30pt; margin: 0 0 6px; line-height:1.1; }
+  .cover .sub { font-size: 14pt; color:#cfe0f5; margin-bottom: 28px; }
+  .cover .tag { display:inline-block; border:1px solid #6fa8ec; border-radius:14px; padding:3px 12px; font-size:9.5pt; color:#dbe9fb; margin-bottom: 30px;}
+  .cover .meta { position:absolute; bottom: 28mm; left:22mm; right:22mm; font-size:9.5pt; color:#bcd2ee; border-top:1px solid #3c5a86; padding-top:10px;}
+  .cover .big { font-size: 11pt; color:#eaf2fc; max-width: 130mm; }
+</style>
+</head>
+<body>
+
+<!-- ===================== COVER ===================== -->
+<div class="cover">
+  <div class="tag">ENGENHARIA REVERSA DE PRODUTO · ANÁLISE TÉCNICA E DE DADOS</div>
+  <h1>Fisgar</h1>
+  <div class="sub">Como funciona, de onde vêm os dados e como replicar</div>
+  <p class="big">Desmontagem completa de uma plataforma brasileira de prospecção imobiliária que liga <b>anúncio → endereço → proprietário → contato</b>, com o mapa de fontes de dados, a arquitetura de replicação, os custos e os limites legais (LGPD).</p>
+  <div class="meta">
+    Documento técnico · gerado em 11/06/2026 · 4 frentes de pesquisa · 50+ fontes citadas<br>
+    Conteúdo educacional/competitivo. Não constitui aconselhamento jurídico. Verifique fontes primárias antes de agir.
+  </div>
+</div>
+
+<!-- ===================== SUMÁRIO EXECUTIVO ===================== -->
+<div class="section">
+<h2>1. Sumário executivo</h2>
+<p><b>O que é.</b> A <b>Fisgar</b> (Fisgar Tecnologia da Informação Ltda, CNPJ 36.931.430/0001-74, Campinas-SP, fundada em 2020) é um SaaS de <b>prospecção para corretores de imóveis</b>. Ela agrega anúncios dos principais portais imobiliários e, no seu recurso-âncora, <b>identifica o proprietário do imóvel e o contato dele</b> (telefone/e-mail) a partir do endereço do anúncio, para o corretor abordar diretamente quem anuncia por conta própria (FSBO — <i>for sale by owner</i>). Inclui ainda CRM, relatório de avaliação, consulta de concorrência, alertas e análise de crédito. Preço: <b>R$ 227–287/mês</b>; exige <b>CRECI</b> ativo.</p>
+
+<div class="callout"><b>A pergunta central — de onde vêm os dados:</b> a Fisgar combina três camadas. (1) <b>Anúncios</b> captados dos portais (algoritmo diário). (2) <b>Identidade do dono</b>, por <b>cruzamento do endereço com a base de IPTU das prefeituras + dados públicos na web</b>. (3) <b>Telefone/e-mail</b> buscados em "bases de dados consultadas" (provedores de enriquecimento), com <b>verificação em tempo real no WhatsApp</b>. É exatamente esse passo (2)→(3) que define o produto — e onde mora o risco jurídico.</p>
+
+<div class="grid2">
+  <div>
+    <div class="kpi"><b>Modelo:</b> agregador de anúncios + resolvedor de identidade do proprietário + CRM/add-ons.</div>
+    <div class="kpi"><b>Atualização:</b> diária (insere novos anúncios, remove vendidos); telefone verificado no WhatsApp na hora.</div>
+    <div class="kpi"><b>Porte:</b> microempresa, 2 sócios, capital R$ 1.000, sem aporte; sem app/API pública (web only).</div>
+  </div>
+  <div>
+    <div class="kpi"><b>Concorrentes diretos:</b> <b>Captei</b> (maior base de proprietários, IA no WhatsApp) e <b>Alude</b>.</div>
+    <div class="kpi"><b>Calcanhar de Aquiles (Reclame Aqui):</b> donos reclamando de uso de dados <i>sem consentimento</i> e corretores reclamando de contatos <i>desatualizados/de corretor</i>.</div>
+    <div class="kpi"><b>Replicável?</b> Tecnicamente sim, com stack open-source; o gargalo real é <b>legal (LGPD)</b>, não técnico.</div>
+  </div>
+</div>
+
+<p><b>Como replicar (resumo).</b> Crawlers/feeds dos portais → normalização e geocoding → casamento endereço↔proprietário (via matrícula de cartório e/ou IPTU) → enriquecimento de contato por provedor com base legal → score de crédito e avaliação → banco geoespacial + busca → app/CRM. Custo de um MVP regional na casa de <b>R$ 4–18 mil/mês</b> somando infra, proxies, enriquecimento e desenvolvimento. <b>O fator decisivo é conformidade</b>: o caminho legal existe (cartório + enriquecimento rastreável + opt-out), o atalho ilegal (bases vazadas/Telegram) expõe a multas da ANPD (até 2% do faturamento, teto R$ 50 mi) e a crimes do Código Penal.</p>
+</div>
+
+<!-- ===================== O PRODUTO ===================== -->
+<div class="section">
+<h2>2. Anatomia do produto</h2>
+<img class="fig" src="img/fig3_anatomy.png" alt="Anatomia do Fisgar">
+<p class="cap">Figura 1 — Fluxo interno reconstruído do Fisgar, do anúncio captado até a abordagem do proprietário.</p>
+
+<h3>2.1 Ficha técnica</h3>
+<table>
+<tr><th style="width:26%">Item</th><th>Detalhe</th></tr>
+<tr><td>Razão social / CNPJ</td><td>Fisgar Tecnologia da Informação Ltda — 36.931.430/0001-74</td></tr>
+<tr><td>Sede / fundação</td><td>Cambuí, Campinas-SP — constituída em 14/04/2020 (domínio de 2019)</td></tr>
+<tr><td>Sócios</td><td>Tiago Penteado Moretzsohn de Castro (administrador); Nuri Eftekhari (desde 2022)</td></tr>
+<tr><td>Porte / capital</td><td>Microempresa; capital social R$ 1.000; sem rodadas de investimento</td></tr>
+<tr><td>Acesso / stack</td><td>Apenas web (<code>painel.fisgar.com.br</code>, CRM em <code>/crm</code>); Cloudflare + PHP; sem app, sem API pública</td></tr>
+<tr><td>Preço</td><td>Plano A: R$ 227/mês (ou R$ 2.724/ano); Plano B: R$ 287/mês (ou R$ 3.444/ano)</td></tr>
+<tr><td>Pré-requisito</td><td>Número de <b>CRECI</b> ativo (ou autorização de imobiliária) para assinar — usado como camada de "conformidade" LGPD</td></tr>
+</table>
+
+<h3>2.2 Módulos / funcionalidades</h3>
+<table>
+<tr><th style="width:28%">Módulo</th><th>O que faz</th></tr>
+<tr><td>Captação de imóveis</td><td>Reúne os anúncios "das principais plataformas" numa base única, filtrável; algoritmo insere novos e remove os vendidos/retirados (atualização diária).</td></tr>
+<tr><td><b>Pesquisa por proprietários</b> <span class="pill">núcleo</span></td><td>Filtro "<b>Anúncios Particulares</b>" mostra só anúncios postados pelo próprio dono (FSBO) com o contato; também permite buscar diretamente pelo proprietário.</td></tr>
+<tr><td>Consulta de concorrência</td><td>Mostra anúncios/imobiliárias concorrentes atuando numa região.</td></tr>
+<tr><td>Alerta imobiliário</td><td>Notifica quando surgem novos anúncios na região-alvo do corretor.</td></tr>
+<tr><td>Relatório de avaliação</td><td>Gera um laudo de avaliação do imóvel (PTAM simplificado) para apresentar ao dono, combinando dados da plataforma com inputs do corretor.</td></tr>
+<tr><td>Análise de crédito</td><td>Relatório do cliente em versão <b>Simplificada</b> e <b>Completa</b> (score + pendências financeiras e judiciais) — via bureau de crédito.</td></tr>
+<tr><td>CRM / funil</td><td>Pipeline de captação, atividades (data/hora/prioridade), clique-para-WhatsApp e e-mail; painel próprio.</td></tr>
+</table>
+
+<h3>2.3 Posição competitiva e fraquezas observadas</h3>
+<div class="grid2">
+  <div class="ok"><b>Forças:</b> dado acionável (dono + WhatsApp verificado), atualização diária, CRM embutido, barreira de acesso por CRECI, preço acessível para corretor autônomo.</div>
+  <div class="warn"><b>Fraquezas (Reclame Aqui):</b> (a) <b>donos</b> reclamam de "obtenção e revenda de dados pessoais sem consentimento"; (b) <b>corretores pagantes</b> relatam anúncios incompletos/desatualizados e contatos que são de corretor ou velhos — ou seja, falha justamente no que vende.</div>
+</div>
+<p class="small">Concorrentes: <b>Captei</b> (marketing de "maior base de proprietários do Brasil", origem IPTU, agentes de IA que abordam no WhatsApp, moeda interna "CapCoin") e <b>Alude</b> (bot que varre a web por donos anunciando na sua região). Equivalente europeu do nicho FSBO: CASAFARI.</p>
+</div>
+
+<!-- ===================== DE ONDE VÊM OS DADOS ===================== -->
+<div class="section">
+<h2>3. De onde vêm os dados (o coração da engenharia reversa)</h2>
+<p>O produto é, na prática, a soma de quatro pipelines de dados. Vamos a cada um — o que a Fisgar faz, qual a fonte provável, e como obter o mesmo de forma legítima.</p>
+
+<h3>3.1 Camada 1 — Anúncios dos portais</h3>
+<p>A Fisgar diz captar "os melhores anúncios das principais plataformas" e atualizá-los diariamente, sem nomeá-las. O mercado é dominado pelo <b>Grupo OLX</b> (que fundiu ZAP + Viva Real e comprou o Grupo ZAP, aprovado pelo CADE em 2020), além de <b>ImovelWeb</b> e <b>Chaves na Mão</b>. Há três formas de obter esse inventário:</p>
+<table>
+<tr><th style="width:24%">Via</th><th>Como é</th><th style="width:18%">Legalidade</th></tr>
+<tr><td>Feed XML <b>VRSync</b> (oficial)</td><td>Padrão de-facto do Grupo OLX: o CRM da imobiliária publica um XML (elementos <code>Listing</code>/<code>Details</code>: preço, IPTU, área, quartos, localização) que o portal ingere a cada ~12h. Serve para <i>publicar</i> seu próprio estoque, não para baixar o dos concorrentes.</td><td class="legal-ok">Legal (é o canal oficial)</td></tr>
+<tr><td>API <b>Órulo</b> (lançamentos)</td><td>API autenticada (Client ID/Secret + token, webhooks, campo <code>updated_at</code>) para consumir catálogo de imóveis <b>novos</b>. O caso mais "limpo" de compartilhamento sancionado.</td><td class="legal-ok">Legal (com contrato)</td></tr>
+<tr><td><b>Scraping</b> dos portais</td><td>Como não há API oficial para ler anúncios de terceiros, agregadores recorrem a scraping. Os portais protegem com <b>Cloudflare/DataDome</b>, exigem JS e fazem <i>fingerprint</i> TLS (devolvem 403 a clientes simples). Ferramentas: Scrapy + Playwright, proxies residenciais.</td><td class="legal-grey">Cinza: não é crime por si, mas viola ToS e pode gerar concorrência desleal (LPI art. 195) e LGPD se capturar dado pessoal</td></tr>
+</table>
+<p class="small">Jurídico do scraping no Brasil: não há lei que o criminalize, mas a responsabilidade se acumula em 4 frentes — LGPD (a ANPD tratou scraping como tratamento de dado pessoal no Radar Tecnológico nº 3, nov/2024), quebra de ToS (contratual), direito autoral sobre a <i>organização</i> da base (Lei 9.610/98, que não protege fatos crus) e <b>concorrência desleal</b> (precedente Curriculum v. Catho).</p>
+
+<h3>3.2 Camada 2 — Identidade do proprietário (o pulo do gato)</h3>
+<p>A Fisgar afirma fazer "um cruzamento completo dos dados relacionados ao endereço" e <b>consultar a base de IPTU das prefeituras</b> para "confirmação dos dados do imóvel e identificação do proprietário", combinando com "dados públicos disponíveis na internet". Como isso é possível:</p>
+<img class="fig" src="img/fig2_funnel.png" alt="Endereço para dono para contato">
+<p class="cap">Figura 2 — As rotas (legal × cinza) para ir do endereço ao dono e ao contato.</p>
+<table>
+<tr><th style="width:26%">Fonte</th><th>O que entrega</th><th style="width:16%">Acesso/custo</th><th style="width:14%">Legal?</th></tr>
+<tr><td><b>Cartório de Registro de Imóveis</b> — matrícula (via <b>ONR/SAEC</b>)</td><td>Dono atual, histórico de transmissões, ônus. <b>Pesquisável por endereço</b> (UF, cidade, rua, número), com a certidão assinada digitalmente.</td><td>~R$ 20–60/certidão, online 24/7</td><td class="legal-ok">Sim — fonte oficial</td></tr>
+<tr><td><b>IPTU / cadastro municipal</b> (ex.: GeoSampa/SQL)</td><td>Dados físicos do imóvel e o número do contribuinte (SQL). Em muitas prefeituras a <b>identidade do dono foi removida por privacidade</b> (parecer PGM-SP 12.195/2020).</td><td>Parte aberta; identidade restrita</td><td class="legal-grey">Imóvel: sim. Dono: cada vez mais restrito</td></tr>
+<tr><td><b>ITBI</b></td><td>Confirma que houve transmissão onerosa (corrobora, não é busca de dono).</td><td>Municipal</td><td class="legal-ok">Registro tributário</td></tr>
+</table>
+<div class="callout"><b>Leitura:</b> o caminho legal e rotineiro de <b>endereço → NOME do dono</b> é a certidão de matrícula pesquisável por endereço no ONR/SAEC. A menção da Fisgar ao "IPTU" é plausível, mas com a tendência de prefeituras ocultarem o titular, a fonte autoritativa de titularidade é o cartório. O IPTU serve sobretudo para obter o SQL e refinar a busca.</p>
+
+<h3>3.3 Camada 3 — Telefone e e-mail (enriquecimento)</h3>
+<p>Ter o <b>nome</b> não dá o <b>telefone</b>. A Fisgar diz que "uma pesquisa adicional retorna dados mais detalhados, podendo incluir telefone e e-mail, caso estejam disponíveis nas bases consultadas", e verifica o número no WhatsApp. Esse "nas bases consultadas" é a parte vaga — e crítica.</p>
+<table>
+<tr><th style="width:30%">Provedor legítimo (API)</th><th>O que faz</th></tr>
+<tr><td><b>BigDataCorp</b> (BigBoost)</td><td>1.000+ atributos, 30+ datasets; de nome/CPF/endereço retorna telefones, e-mails, endereços; validação de telefone integrada às operadoras. Self-service por API.</td></tr>
+<tr><td><b>Serasa Experian</b> / <b>Neoway (B3)</b></td><td>Enriquecimento, segmentação (Mosaic), cruzamento com Receita/Bancos/Juntas. Onboarding por contrato.</td></tr>
+<tr><td><b>Assertiva, upLexis, dbdireto, addLead, Direct Data</b></td><td>Higienização + enriquecimento (DNE Correios, Anatel), telefone por CPF/CNPJ em camadas de relacionamento.</td></tr>
+</table>
+<p class="small"><b>Higienização de base</b> = padronizar nomes, validar CPF/CNPJ (Receita), corrigir endereço (DNE Correios), validar telefone (Anatel/operadoras) e <b>suprimir números em "Não Me Perturbe" (Anatel)</b> e "Não Me Ligue" (Procon-SP, que também cobre SMS/WhatsApp). A legalidade do enriquecimento depende de <b>procedência rastreável + base legal</b>; advogados alertam que "muitos serviços de enriquecimento no mercado são ilegais".</p>
+<div class="warn"><b>Onde quase todo produto desse nicho derrapa:</b> a tentação de alimentar o passo nome→telefone com <b>bases vazadas</b> (o megavazamento de ~223 milhões de CPFs traz nome, CPF, endereço, telefone) ou <b>bots de Telegram</b> (R$ 15–200). Usar/comprar isso <b>não tem base legal na LGPD</b> e pode configurar crime (CP art. 154-A, 155). As reclamações de donos contra a Fisgar ("uso ilegal de dados") vivem exatamente nessa zona.</p>
+
+<h3>3.4 Camada 4 — Crédito e avaliação</h3>
+<p>A <b>análise de crédito</b> (score + pendências) vem de <b>bureaus</b>: Serasa Experian (Score &amp; Atributos via API), Boa Vista/Equifax (SCPC), Quod (controlada pelos 5 maiores bancos) ou SPC Brasil (rede CDL). Exige CNPJ, contrato/credenciamento (ou associação a CDL) e <b>finalidade lícita</b>. O Cadastro Positivo é opt-out desde a LC 166/2019. A <b>avaliação</b> do imóvel é um AVM simples: preço por m² da região (derivado dos próprios anúncios captados) ajustado por atributos — exatamente o que a base de listings permite calcular.</p>
+
+<h3>3.5 Tabela-mestre — fonte × entrega × legalidade × custo</h3>
+<table>
+<tr><th>Dado vendido</th><th>Fonte provável da Fisgar</th><th>Como obter legalmente</th><th style="width:13%">Legalidade</th><th style="width:12%">Custo típico</th></tr>
+<tr><td>Anúncios + preço/m²</td><td>Scraping dos portais</td><td>Feed VRSync (próprio), API Órulo, parcerias</td><td class="legal-grey">Cinza</td><td>Infra + proxies</td></tr>
+<tr><td>Nome do proprietário</td><td>IPTU + dados públicos web</td><td>Certidão de matrícula ONR/SAEC por endereço</td><td class="legal-ok">Legal</td><td>R$ 20–60/imóvel</td></tr>
+<tr><td>Telefone / e-mail</td><td>"bases consultadas" (vago)</td><td>BigDataCorp/Serasa/addLead com base legal + opt-out</td><td class="legal-grey">Legal só se rastreável</td><td>R$ 0,10–1/consulta</td></tr>
+<tr><td>Verificação do número</td><td>Checagem no WhatsApp</td><td>API/cheque de presença no WhatsApp</td><td class="legal-grey">Cinza (ToS WhatsApp)</td><td>Baixo</td></tr>
+<tr><td>Score de crédito</td><td>Bureau</td><td>Serasa/Boa Vista/Quod/SPC com credenciamento</td><td class="legal-ok">Legal (com contrato)</td><td>R$ 0,50–5/consulta</td></tr>
+<tr><td>Dados de empresa (B2B)</td><td>—</td><td>Receita Federal (dados abertos CNPJ), BrasilAPI, ViaCEP</td><td class="legal-ok">Legal (público)</td><td>Grátis/baixo</td></tr>
+</table>
+</div>
+
+<!-- ===================== COMO REPLICAR ===================== -->
+<div class="section">
+<h2>4. Como replicar — arquitetura, stack e custo</h2>
+<img class="fig" src="img/fig1_pipeline.png" alt="Pipeline de replicação">
+<p class="cap">Figura 3 — Pipeline de referência para replicar a plataforma, das fontes ao app, com a camada de LGPD transversal.</p>
+
+<h3>4.1 Passo a passo</h3>
+<ul>
+<li><b>1. Ingestão de anúncios.</b> Para o seu próprio estoque, gere/consuma feeds <b>VRSync</b> e a <b>API Órulo</b>. Para cobertura ampla, crawlers <b>Scrapy + Playwright</b> com proxies residenciais (ciente do risco de ToS/concorrência desleal). Capte: endereço/região, preço, atributos, tipo de anunciante (particular × imobiliária), telefone exibido.</li>
+<li><b>2. Normalização & dedup.</b> Padronize endereços (regex de abreviações), valide CEP (<b>ViaCEP</b>), geocodifique (<b>Nominatim/Photon self-hosted</b> — evite armazenar resultados do Google Maps por restrição de ToS). Deduplique o mesmo imóvel anunciado em vários portais por geo-hash + similaridade.</li>
+<li><b>3. Casamento endereço↔proprietário.</b> Para imóveis de interesse, puxe a <b>certidão de matrícula (ONR/SAEC) por endereço</b> → nome do dono. Use IPTU/SQL onde disponível para refinar. (É aqui que o produto cria valor — e onde os custos por consulta aparecem.)</li>
+<li><b>4. Enriquecimento de contato.</b> Nome/CPF → telefone/e-mail via <b>provedor com base legal</b> (BigDataCorp, addLead, Serasa). <b>Higienize</b> (DNE, Anatel, supressão "Não Me Perturbe"/"Não Me Ligue"). Verifique presença no WhatsApp.</li>
+<li><b>5. Crédito & avaliação.</b> Credencie-se a um bureau para score/pendências; calcule um AVM de preço por m² a partir da própria base.</li>
+<li><b>6. Armazenamento & serviço.</b> <b>PostgreSQL + PostGIS</b> (geo), <b>OpenSearch</b> (busca/filtros), backend de alertas e dedup, e um app web com CRM/funil. Camada de auditoria de origem de cada dado.</li>
+</ul>
+
+<h3>4.2 Stack open-source sugerida</h3>
+<table>
+<tr><th style="width:30%">Camada</th><th>Ferramentas</th></tr>
+<tr><td>Coleta</td><td>Scrapy, Playwright, scrapy-playwright, curl_cffi (TLS), proxies residenciais</td></tr>
+<tr><td>Geocoding/endereço</td><td>ViaCEP, Nominatim/Photon (self-host), dicionários DNE; geocodebr/CNEFE (IBGE) para ponto</td></tr>
+<tr><td>Dados oficiais</td><td>Dados abertos CNPJ (Receita Federal, mensal), BrasilAPI/CNPJ.ws; ONR/SAEC para matrícula</td></tr>
+<tr><td>Enriquecimento/crédito</td><td>APIs BigDataCorp, addLead, Serasa/Boa Vista/Quod (via contrato)</td></tr>
+<tr><td>Armazenamento/busca</td><td>PostgreSQL + PostGIS, OpenSearch/Elasticsearch, Redis (filas), S3-compatível</td></tr>
+<tr><td>App</td><td>Backend (Node/Python), front (React), workers de alerta e verificação WhatsApp</td></tr>
+</table>
+
+<h3>4.3 Custo e esforço (ordem de grandeza)</h3>
+<img class="fig" src="img/fig4_cost.png" alt="Custo mensal estimado">
+<p class="cap">Figura 4 — Faixas ilustrativas de custo mensal de um MVP regional. O custo por consulta (matrícula, enriquecimento, crédito) escala com o volume e é o principal driver variável.</p>
+<p>Um <b>MVP regional</b> (uma cidade/região, algumas dezenas de milhares de imóveis) é viável por uma equipe pequena em poucos meses. Os custos fixos (infra + proxies + dev) ficam na casa de <b>R$ 4–18 mil/mês</b>; os variáveis (certidão de matrícula ~R$20–60, enriquecimento centavos a R$1, crédito até R$5) dependem de quantos imóveis você "resolve" — por isso produtos do nicho só buscam contato sob demanda (modelo de "moeda"/créditos, como a CapCoin do Captei).</p>
+</div>
+
+<!-- ===================== LEGAL ===================== -->
+<div class="section">
+<h2>5. O risco que define o negócio: LGPD</h2>
+<p>Tecnicamente o produto é replicável. <b>O verdadeiro fosso (e a verdadeira bomba) é jurídico.</b> Tratar telefone/e-mail de proprietários é tratamento de <b>dado pessoal</b> sob a LGPD (Lei 13.709/2018), fiscalizada pela ANPD.</p>
+
+<div class="grid2">
+<div class="ok"><b>Provavelmente defensável</b><ul>
+<li>Endereço→nome via cartório (fonte oficial).</li>
+<li>Enriquecimento por provedor com <b>procedência rastreável</b> e base legal.</li>
+<li>Base de <b>legítimo interesse</b> (art. 7º, IX) com <b>LIA/teste de balanceamento</b> documentado.</li>
+<li>Transparência + <b>opt-out imediato</b> e atendimento aos direitos do titular (art. 18).</li>
+<li>Restrição de acesso a profissionais (CRECI) e finalidade específica de negócio imobiliário.</li>
+</ul></div>
+<div class="warn"><b>Ilegal / alto risco</b><ul>
+<li>Usar <b>bases vazadas</b> ou comprar listas de bots (Telegram).</li>
+<li>Telefone/e-mail sem origem rastreável ("bases consultadas" genéricas).</li>
+<li>Desvio de finalidade (ex.: raspar telefone do CNPJ aberto da Receita para spam).</li>
+<li>Ignorar opt-out / "Não Me Perturbe" / "Não Me Ligue".</li>
+<li>Cold-contact de quem nunca teve relação — cenário de maior risco e já sancionado.</li>
+</ul></div>
+</div>
+
+<p><b>Sanções (art. 52):</b> advertência; multa de <b>até 2% do faturamento, teto R$ 50 milhões por infração</b>; bloqueio/eliminação de dados; publicização. A 1ª multa da ANPD (Telekall, 2023) puniu tratamento <b>sem base legal</b> e <b>ausência de DPO</b> — sem imunidade para pequenos. Em 2025 a fiscalização se intensificou (Deliberação CD/ANPD 10/2025 trouxe multa diária). Vale notar que a própria <b>Fisgar acumula reclamações de titulares</b> alegando obtenção e revenda de dados sem consentimento — sinal de exatamente onde o modelo é atacável.</p>
+
+<div class="callout"><b>Recomendação de conformidade para quem quer replicar:</b> (1) origine titularidade no cartório; (2) contrate só enriquecimento com contrato e rastreabilidade; (3) documente LIA e nomeie DPO; (4) implemente opt-out e supressão (Não Me Perturbe/Não Me Ligue) <i>antes</i> de operar; (5) registre a origem de cada dado (auditoria); (6) jamais toque em base vazada. Sem isso, o produto é uma autuação esperando para acontecer.</p>
+</div>
+
+<!-- ===================== CONCLUSÃO ===================== -->
+<div class="section">
+<h2>6. Conclusão</h2>
+<p>A Fisgar é um <b>agregador de anúncios + resolvedor de identidade do proprietário + CRM</b>. O valor não está na tecnologia (replicável com stack open-source e alguns meses de trabalho), e sim em <b>dois ativos</b>: (a) a <b>cobertura e frescor</b> da base de anúncios captados diariamente, e (b) a <b>taxa de acerto</b> do casamento endereço→dono→telefone-ativo. As reclamações mostram que é justamente nesse acerto (contatos velhos/de corretor) e na <b>conformidade</b> (donos alegando uso sem consentimento) que o modelo é frágil.</p>
+<p><b>Se o seu objetivo é replicar:</b> a diferenciação vencedora não é "ter os dados" — é <b>tê-los de forma legal, rastreável e mais precisa que os incumbentes</b>. Construa a titularidade sobre a fonte oficial (cartório), o contato sobre provedores auditáveis, e a confiança sobre opt-out e transparência. Isso vira, ao mesmo tempo, o seu fosso competitivo e o seu escudo jurídico.</p>
+</div>
+
+<!-- ===================== FONTES ===================== -->
+<div class="section">
+<h2>7. Fontes</h2>
+<h4>Produto Fisgar e concorrentes</h4>
+<p class="small">
+Fisgar — Como funciona: https://www.fisgar.com.br/como-funciona · Planos: https://fisgar.com.br/planos · FAQ: https://www.fisgar.com.br/faq · Blog (abordar o proprietário): https://blog.fisgar.com.br/encontrei-um-imovel-na-fisgar-e-agora-como-abordar-o-proprietario/ · Econodata (CNPJ): https://www.econodata.com.br/consulta-empresa/36931430000174-FISGAR-TECNOLOGIA-DA-INFORMACAO-LTDA · Reclame Aqui (perfil): https://www.reclameaqui.com.br/empresa/fisgar/ · RA "revenda de dados sem consentimento": https://www.reclameaqui.com.br/fisgar/obtencao-e-revenda-de-dados-pessoais-sem-consentimento_xM6YYmd_anUTWkAp/ · RA "propaganda enganosa": https://www.reclameaqui.com.br/fisgar/propaganda-enganosa-nao-entregaram-o-que-e-prometido_ha7D_qxrTGdMInUB/ · Captei: https://captei.com/ e https://captei.com.br/captacao-ativa/ · Alude: https://www.alude.com.br/listings
+</p>
+<h4>Anúncios / portais</h4>
+<p class="small">
+Grupo OLX developers: https://developers.grupozap.com/ · VRSync (Listing/Details): https://developers.grupozap.com/feeds/vrsync/elements/listing.html · Ativar integração (12h): https://ajuda.zapimoveis.com.br/s/article/como-ativar-a-integracao-de-imoveis · OLX compra Grupo ZAP: https://www.olxgroup.com/news/olx-brazil-to-acquire-grupo-zap-and-strengthen-its-position-in-the-real-estate-segment-in-the-country/ · Órulo API: https://documento.orulo.com.br/ e integração CRM: https://movidesk.orulo.com.br/kb/pt-br/article/189733/ · Scraping/anti-bot (Scrapfly DataDome): https://scrapfly.io/blog/posts/how-to-bypass-datadome-anti-scraping/ · LGPD e web scraping (ANPD Radar nº3): https://assisemendes.com.br/web-scraping-e-lgpd-riscos-juridicos-do-uso-de-dados-publicos/ · Lei 9.610/98: https://www.planalto.gov.br/ccivil_03/leis/l9610.htm
+</p>
+<h4>Endereço → proprietário</h4>
+<p class="small">
+ONR/SAEC (registradores): https://registradores.onr.org.br/ · Visualizar matrícula: https://registradores.onr.org.br/VisualizarMatricula/DefaultVM.aspx?from=menu · Pedir certidão online: https://www.jusbrasil.com.br/artigos/como-pedir-uma-certidao-de-matricula-de-imovel-online-registradores-onr/3088963446 · GeoSampa/IPTU aberto: https://gestaourbana.prefeitura.sp.gov.br/noticias/prefeitura-disponibiliza-base-do-iptu-em-formato-aberto-no-geosampa/ · PGM-SP 12.195/2020 (dono confidencial): https://legislacao.prefeitura.sp.gov.br/leis/parecer-procuradoria-geral-do-municipio-pgm-12195-de-5-de-outubro-de-2020 · Megavazamento 223 mi CPFs: https://tecnoblog.net/especiais/megavazamento-de-223-milhoes-de-cpfs-um-ano-se-passou-e-ainda-ha-perguntas-sem-resposta/ · Comércio de dados no Telegram: https://nucleo.jor.br/curtas/2026-03-12-cpf-endereco-e-renda-ong-revela-comercio-de-dados-pessoais-no-telegram/
+</p>
+<h4>Enriquecimento, crédito, do-not-call</h4>
+<p class="small">
+BigDataCorp BigBoost: https://bigdatacorp.com.br/bigboost · addLead: https://addlead.com.br/ · Enriquecimento e LGPD (Migalhas): https://www.migalhas.com.br/coluna/impressoes-digitais/366839/o-enriquecimento-de-bases-de-dados-a-luz-da-lgpd · Serasa Score &amp; Atributos: https://www.serasaexperian.com.br/solucoes/score-e-atributos-api/ · Equifax/Boa Vista SCPC API: https://developer.equifax.com/products/apiproducts/equifax-boa-vista-api-scpc · Quod: https://www.quod.com.br/cadastro-positivo · Anatel "Não Me Perturbe": https://www.gov.br/anatel/pt-br/consumidor/telemarketing/nao-me-perturbe · Procon-SP "Não Me Ligue": https://bloqueio.procon.sp.gov.br/
+</p>
+<h4>CNPJ / geocoding / LGPD</h4>
+<p class="small">
+Dados abertos CNPJ (Receita): https://dados.gov.br/dados/conjuntos-dados/cadastro-nacional-da-pessoa-juridica---cnpj · Esquema (repo): https://github.com/aphonsoar/Receita_Federal_do_Brasil_-_Dados_Publicos_CNPJ/ · BrasilAPI: https://brasilapi.com.br/docs · ViaCEP: https://viacep.com.br/ · Nominatim policy: https://operations.osmfoundation.org/policies/nominatim/ · Google Geocoding policies: https://developers.google.com/maps/documentation/geocoding/policies · LGPD art.7: https://lgpd-brasil.info/capitulo_02/artigo_07 · ANPD Guia Legítimo Interesse: https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia_legitimo_interesse.pdf · 1ª multa ANPD (Telekall): https://www.gov.br/anpd/pt-br/assuntos/noticias/anpd-aplica-a-primeira-multa-por-descumprimento-a-lgpd
+</p>
+<p class="small" style="margin-top:14px;color:#9aa3af">Observação metodológica: o domínio fisgar.com.br bloqueia coleta automatizada (HTTP 403); as descrições do próprio produto vêm de trechos indexados de suas páginas e podem precisar de verificação por login. Faixas de custo são ilustrativas (ordem de grandeza). Este material é educacional/analítico e não constitui aconselhamento jurídico.</p>
+</div>
+
+</body>
+</html>
