@@ -1,0 +1,171 @@
+# ============================================================
+# Ranking de Investimentos Brasileiros — Configuração Central
+# ============================================================
+# Atualizar ref_date a cada mês para re-executar com nova janela
+
+ref_date: "auto"          # "auto" = último mês civil fechado a partir de hoje
+                           # ou data explícita: "2025-12-31"
+
+windows:                   # janelas de análise em anos
+  - 2
+  - 3
+  - 5
+  - 10
+
+# ----------------------------------------------------------
+# Fontes Yahoo Finance (via yfinance + curl_cffi)
+# ----------------------------------------------------------
+yahoo_tickers:
+  Ibovespa:
+    ticker: "^BVSP"
+    currency: "BRL"
+    is_total_return: true
+    note: "Índice de retorno total (reinveste proventos)"
+    start: "2015-01-01"
+
+  Bitcoin:
+    ticker: "BTC-USD"
+    currency: "USD"
+    is_total_return: true
+    note: "Preço em USD — convertido para BRL via PTAX fim-de-mês"
+    start: "2015-01-01"
+
+  Ouro:
+    ticker: "GC=F"
+    currency: "USD"
+    is_total_return: false
+    note: "Futuro de ouro CME em USD — convertido para BRL; exclui custos de roll"
+    start: "2015-01-01"
+
+  Acoes_EUA_BDR:
+    ticker: "IVVB11.SA"
+    currency: "BRL"
+    is_total_return: false
+    proxy_for: "BDRX / S&P500 em BRL"
+    note: >
+      ETF iShares S&P500 BRL (IVVB11). Preço de mercado, não inclui dividendos reinvestidos.
+      Subestima retorno total ~0.1-0.3%/a. Para janela 10a: ^GSPC x BRL=X como extensão.
+    start: "2015-01-01"
+
+  Acoes_EUA_BDR_ext:
+    ticker: "^GSPC"
+    currency: "USD"
+    is_total_return: false
+    note: "Extensão do histórico de BDRs para 10 anos — S&P 500 convertido para BRL"
+    start: "2015-01-01"
+    hidden: true            # não aparece como ativo independente; usado internamente
+
+  Dividendos_IDIV:
+    ticker: "DIVO11.SA"
+    currency: "BRL"
+    is_total_return: false
+    proxy_for: "IDIV"
+    note: "ETF IDIV (DIVO11). Preço de mercado; subestima TR. Disponível desde Jul/2015 na B3."
+    start: "2015-01-01"
+
+  FIIs_IFIX:
+    ticker: "HGLG11.SA"
+    currency: "BRL"
+    is_total_return: false
+    proxy_for: "IFIX"
+    note: >
+      HGLG11 (CSHG Logística FII) como proxy do IFIX — maior FII de logística BR.
+      Preço inclui pagamentos de JCP mensais declarados mas NÃO reinvestidos automaticamente;
+      série de preços yfinance pode subestimar TR. Sem ETF de IFIX com 10 anos disponível.
+    start: "2015-01-01"
+
+  Dolar:
+    ticker: "BRL=X"
+    currency: "BRL"
+    is_total_return: true
+    note: "Taxa de câmbio USD/BRL (PTAX) fim-de-mês — variação cambial como ativo"
+    start: "2015-01-01"
+
+  SmallCaps:
+    ticker: "SMAL11.SA"
+    currency: "BRL"
+    is_total_return: false
+    proxy_for: "SMLL"
+    note: "ETF Small Cap (SMAL11). Opcional. Preço de mercado."
+    start: "2015-01-01"
+    optional: true
+
+  USD_BRL_fx:
+    ticker: "BRL=X"
+    currency: "BRL"
+    is_total_return: false
+    note: "Série de câmbio USD/BRL usada para conversão — mesma que Dolar"
+    start: "2015-01-01"
+    hidden: true
+
+# ----------------------------------------------------------
+# Fontes Banco Central do Brasil (SGS)
+# ----------------------------------------------------------
+bcb_series:
+  CDI:
+    series_id: 4391
+    frequency: "monthly"
+    unit: "pct_monthly"    # % ao mês já acumulado
+    currency: "BRL"
+    is_total_return: true
+    note: "CDI acumulado mensal (SGS 4391). Fonte BCB. Taxa over composta no mês."
+    url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4391/dados"
+
+  Poupanca:
+    series_id: 196
+    frequency: "monthly"
+    unit: "pct_monthly"
+    currency: "BRL"
+    is_total_return: true
+    note: "Rendimento mensal da poupança antiga (SGS 196). Fonte BCB."
+    url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.196/dados"
+
+  IMA_B:
+    series_id: 12466
+    frequency: "daily"
+    unit: "index_price"    # nível do índice — retorno calculado de ponta a ponta mensal
+    currency: "BRL"
+    is_total_return: true
+    note: >
+      IMA-B preço diário (SGS 12466) — índice de retorno total dos títulos IPCA+.
+      Retorno mensal = (P_last_day_month / P_last_day_prev_month) - 1.
+      Fonte BCB, série publicada até ~mai/2023; após: complementar com IMAB11.SA.
+    url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.12466/dados"
+
+  IPCA:
+    series_id: 433
+    frequency: "monthly"
+    unit: "pct_monthly"
+    currency: "BRL"
+    is_total_return: false
+    note: "IPCA mensal (SGS 433). Usado como referência de inflação."
+    url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados"
+    hidden: true
+
+# ----------------------------------------------------------
+# Parâmetros de Validação
+# ----------------------------------------------------------
+validation:
+  max_nan_pct: 0.10          # máximo 10% de meses faltantes por janela
+  reconcile_tolerance_pp: 2.0  # divergência máx vs benchmark externo (p.p. ao ano)
+  min_obs_for_window:
+    2:  22                   # mínimo 22 de 24 meses
+    3:  32                   # mínimo 32 de 36 meses
+    5:  54                   # mínimo 54 de 60 meses
+    10: 108                  # mínimo 108 de 120 meses
+
+# ----------------------------------------------------------
+# Cache
+# ----------------------------------------------------------
+cache:
+  raw_dir: "data/raw"
+  max_age_days: 1            # reusa cache se < 1 dia; --refresh força rebaixa
+
+# ----------------------------------------------------------
+# Output
+# ----------------------------------------------------------
+output:
+  dir: "outputs"
+  xlsx_file: "rentabilidade.xlsx"
+  chart_file: "ranking_barras.png"
+  ranking_csv: "ranking_{window}a.csv"
