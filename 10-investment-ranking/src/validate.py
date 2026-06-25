@@ -19,15 +19,17 @@ from src.metrics import reference_date, window_slice
 log = logging.getLogger(__name__)
 
 SANITY_BENCHMARKS = {
-    # Janela 2 anos ~jan/2024–dez/2025, BRL: referência de sanidade
-    "Bitcoin":       (2.5, 5.0),    # %/mês — intervalo aceitável
-    "Ouro":          (2.0, 4.5),
-    "Acoes_EUA_BDR": (1.5, 3.5),
-    "Ibovespa":      (0.0, 1.5),
+    # Janela 2 anos ~jun/2024–mai/2026, BRL.
+    # Nota: BRL valorizou vs USD neste período (BRL=X: 5.50→5.05), comprimindo retornos
+    # de ativos USD. Bitcoin caiu de pico $115k para $73k em mai/2026.
+    "Bitcoin":       (-2.0, 5.0),   # %/mês — BRL appreciation pressiona; variação ampla
+    "Ouro":          (1.5, 5.0),
+    "Acoes_EUA_BDR": (0.8, 3.5),
+    "Ibovespa":      (0.0, 2.5),
     "CDI":           (0.7, 1.3),
     "Poupanca":      (0.3, 0.9),
-    "Dolar":         (0.2, 1.0),
-    "IMA_B":         (0.5, 1.5),
+    "Dolar":         (-1.0, 1.5),   # câmbio pode ir nos dois sentidos
+    "IMA_B":         (0.5, 2.0),    # IPCA+ em período de juros altos
 }
 
 

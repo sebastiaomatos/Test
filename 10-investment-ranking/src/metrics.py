@@ -144,17 +144,19 @@ def build_metrics_table(
 
 def top10_table(metrics_df: pd.DataFrame) -> pd.DataFrame:
     """Formata tabela Top 10 para exibição."""
-    df = metrics_df.head(10).copy()
-    display = pd.DataFrame()
-    display["Rank"] = range(1, len(df) + 1)
-    display["Investimento"] = df.index
-    display["Retorno Acum. (%)"] = (df["total_return"] * 100).round(2)
-    display["Rend. Médio Mensal (%) geom."] = (df["geom_monthly"] * 100).round(3)
-    display["CAGR (%)"] = (df["cagr"] * 100).round(2)
-    display["Vol. Mensal (%)"] = (df["vol_monthly"] * 100).round(3)
-    display["Ret/Risco vs CDI"] = df["ret_risk_vs_cdi"].round(3)
-    display["N meses"] = df["n_months"].astype(int)
-    display = display.set_index("Rank")
+    df = metrics_df.head(10).copy().reset_index()  # reset para índice numérico
+    df.insert(0, "Rank", range(1, len(df) + 1))
+
+    display = pd.DataFrame({
+        "Rank":                           df["Rank"],
+        "Investimento":                   df["asset"],
+        "Retorno Acum. (%)":              (df["total_return"] * 100).round(2),
+        "Rend. Médio Mensal (%) geom.":   (df["geom_monthly"] * 100).round(3),
+        "CAGR (%)":                       (df["cagr"] * 100).round(2),
+        "Vol. Mensal (%)":                (df["vol_monthly"] * 100).round(3),
+        "Ret/Risco vs CDI":               df["ret_risk_vs_cdi"].round(3),
+        "N meses":                        df["n_months"].astype(int),
+    }).set_index("Rank")
     return display
 
 

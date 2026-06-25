@@ -82,7 +82,7 @@ def save_xlsx(
         raw = (returns_df * 100).round(4)
         raw.index = raw.index.strftime("%Y-%m")
         raw.columns = [ASSET_LABELS.get(c, c) for c in raw.columns]
-        raw.to_excel(writer, sheet_name="Séries Brutas (%/mês)")
+        raw.to_excel(writer, sheet_name="Series Brutas pct-mes")
 
         # Abas por janela
         for years, df in sorted(metrics_by_window.items()):

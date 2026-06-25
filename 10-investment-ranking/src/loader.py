@@ -136,9 +136,18 @@ def _load_sp500_extension(cfg, cache_dir, usd_brl, refresh=False):
 def _extend_imab(imab_bcb: pd.Series, cfg, cache_dir, refresh=False) -> pd.Series:
     """
     Estende IMA-B com IMAB11.SA para meses não cobertos pelo BCB.
-    O BCB pára em ~mai/2023; IMAB11.SA cobre mai/2019 em diante.
+    O BCB pára em mai/2023. IMAB11.SA tem dados estragados (preço congelado=79.50)
+    de Abr/2022 a Dez/2025; usamos IMAB11 apenas a partir de Jan/2026.
+
+    NOTA DE QUALIDADE: gap Jun/2023-Dez/2025 (31 meses) sem dados confiáveis.
+    Para janelas que caem neste período, IMA-B terá cobertura reduzida (NaN).
     """
     from src.sources.yahoo import fetch_monthly
+    import numpy as np
+
+    # Último mês bom do BCB
+    bcb_end = imab_bcb.dropna().index[-1] if (imab_bcb is not None and len(imab_bcb) > 0) else None
+
     try:
         imab11_p = fetch_monthly(
             "IMAB11.SA", start="2019-01-01",
@@ -146,19 +155,47 @@ def _extend_imab(imab_bcb: pd.Series, cfg, cache_dir, refresh=False) -> pd.Serie
             max_age_days=cfg["cache"]["max_age_days"],
             refresh=refresh,
         )
+
+        # Filtra preços estragados: qualquer sequência de preço constante >= 5 meses = estale
+        # Método: marcar NaN onde o preço não muda por 3+ meses consecutivos
+        price_diff = imab11_p.diff().abs()
+        rolling_min = price_diff.rolling(3, min_periods=3).min()
+        stale_mask = (rolling_min == 0.0) & (imab11_p == 79.5)
+        n_stale = stale_mask.sum()
+        if n_stale > 0:
+            log.warning("IMA-B: IMAB11.SA tem %d meses com preço estagnado (=79.50) — marcados NaN", n_stale)
+            # Marca meses com preço estagnado (e um mês antes do retorno ao preço real) como NaN
+            # De forma conservadora: marca NaN do início do stale até o mês antes do primeiro preço "vivo"
+            stale_months = imab11_p.index[stale_mask]
+            if len(stale_months) > 0:
+                stale_start = stale_months[0]
+                stale_end = stale_months[-1]
+                imab11_p.loc[stale_start:stale_end] = np.nan
+                log.warning("IMA-B: preços IMAB11 zerados para %s a %s",
+                            stale_start.strftime("%Y-%m"), stale_end.strftime("%Y-%m"))
+
         imab11_ret = _price_series_to_return(imab11_p)
+        # Remove NaN (meses estragados)
+        imab11_ret = imab11_ret.dropna()
+
         if imab_bcb is None or len(imab_bcb) == 0:
-            log.info("IMA-B: usando apenas IMAB11.SA")
+            log.info("IMA-B: usando apenas IMAB11.SA (após limpeza)")
             return imab11_ret
-        # Usa BCB onde disponível, IMAB11 para meses faltantes
+
+        # Combina: BCB como principal, IMAB11 apenas para meses APÓS o final do BCB
         combined = imab_bcb.copy()
-        gap_months = imab11_ret.index.difference(combined.dropna().index)
-        if len(gap_months) > 0:
-            log.info("IMA-B: BCB cobre até %s; complementando com IMAB11 para %d meses",
-                     combined.dropna().index[-1].strftime("%Y-%m"), len(gap_months))
-            combined = pd.concat([combined, imab11_ret[gap_months]]).sort_index()
+        post_bcb = imab11_ret[imab11_ret.index > (bcb_end if bcb_end else pd.Timestamp("2023-05-01"))]
+        if len(post_bcb) > 0:
+            log.info("IMA-B: BCB cobre até %s; IMAB11 (limpo) complementa %d meses a partir de %s",
+                     bcb_end.strftime("%Y-%m") if bcb_end else "N/A",
+                     len(post_bcb), post_bcb.index[0].strftime("%Y-%m"))
+            combined = pd.concat([combined, post_bcb]).sort_index()
             combined = combined[~combined.index.duplicated(keep="first")]
+        else:
+            log.warning("IMA-B: IMAB11 não tem dados válidos após BCB — gap Jun/2023-Dez/2025 sem cobertura")
+
         return combined
+
     except Exception as e:
         log.warning("IMAB11.SA não disponível para extensão: %s", e)
         return imab_bcb

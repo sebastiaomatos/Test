@@ -1,18 +1,20 @@
 """
 Fonte: Yahoo Finance via yfinance + curl_cffi.
 
-Usa curl_cffi como sessão para contornar TLS do proxy corporativo.
-CURL_CA_BUNDLE deve estar setado para /root/.ccr/ca-bundle.crt (ou equivalente).
+Estratégia: busca dados DIÁRIOS e resampling fim-de-mês para evitar gaps
+que ocorrem no endpoint mensal do yfinance para ETFs B3.
+
+CURL_CA_BUNDLE deve estar setado para /root/.ccr/ca-bundle.crt.
 Cache em parquet por ticker; reusa se < max_age_days.
 """
 import os
 import time
 import logging
+import warnings
 from pathlib import Path
 from datetime import datetime, timedelta
 
 import pandas as pd
-import numpy as np
 
 log = logging.getLogger(__name__)
 
@@ -23,19 +25,14 @@ _SESSION = None
 def _get_session():
     global _SESSION
     if _SESSION is None:
-        try:
-            from curl_cffi import requests as cf
-            _SESSION = cf.Session(impersonate="chrome110", verify=CA_BUNDLE)
-            log.debug("curl_cffi session criada (CA=%s)", CA_BUNDLE)
-        except ImportError:
-            log.warning("curl_cffi não encontrado; usando requests padrão")
-            import requests
-            _SESSION = requests.Session()
+        from curl_cffi import requests as cf
+        _SESSION = cf.Session(impersonate="chrome110", verify=CA_BUNDLE)
+        log.debug("curl_cffi session criada (CA=%s)", CA_BUNDLE)
     return _SESSION
 
 
 def _cache_path(cache_dir: Path, ticker: str) -> Path:
-    safe = ticker.replace("^", "IDX_").replace("=", "FX_").replace("/", "_")
+    safe = ticker.replace("^", "IDX_").replace("=", "FX_").replace("/", "_").replace(".", "_")
     return cache_dir / f"{safe}.parquet"
 
 
@@ -57,15 +54,17 @@ def fetch_monthly(
     max_retries: int = 4,
 ) -> pd.Series:
     """
-    Retorna série mensal de preço de fechamento ajustado (Close).
-    Index: DatetimeIndex (último dia útil do mês, UTC normalizado).
+    Retorna série mensal de preço de fechamento ajustado.
+    Usa dados DIÁRIOS resamplados para fim de mês (evita gaps do endpoint mensal).
+    Index: DatetimeIndex primeiro dia do mês (convenção do pipeline).
     """
     cache_dir.mkdir(parents=True, exist_ok=True)
     cp = _cache_path(cache_dir, ticker)
 
     if not refresh and _is_fresh(cp, max_age_days):
         s = pd.read_parquet(cp).squeeze()
-        log.info("CACHE %s: %d obs (%s - %s)", ticker, len(s), s.index[0].date(), s.index[-1].date())
+        log.info("CACHE %s: %d obs (%s - %s)", ticker, len(s),
+                 s.index[0].date(), s.index[-1].date())
         return s
 
     if end is None:
@@ -77,18 +76,29 @@ def fetch_monthly(
     for attempt in range(max_retries):
         try:
             t = yf.Ticker(ticker, session=session)
-            h = t.history(start=start, end=end, interval="1mo", auto_adjust=True)
+            # Busca dados diários — mais confiável que mensal para ETFs B3
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                h = t.history(start=start, end=end, interval="1d", auto_adjust=True)
+
             if h.empty:
                 raise ValueError(f"Sem dados para {ticker}")
-            s = h["Close"].rename(ticker)
-            s.index = pd.to_datetime(s.index).tz_localize(None)
-            # Normaliza para primeiro dia do mês (convenção: identifica o mês)
-            s.index = s.index.to_period("M").to_timestamp()
-            s = s[~s.index.duplicated(keep="last")]
-            s = s.sort_index()
-            pd.DataFrame(s).to_parquet(cp)
-            log.info("BAIXOU %s: %d obs (%s - %s)", ticker, len(s), s.index[0].date(), s.index[-1].date())
-            return s
+
+            # Resampla para fim de mês
+            close = h["Close"]
+            close.index = pd.to_datetime(close.index).tz_localize(None)
+            monthly = close.resample("ME").last()
+            # Normaliza para primeiro dia do mês
+            monthly.index = monthly.index.to_period("M").to_timestamp()
+            monthly = monthly[~monthly.index.duplicated(keep="last")]
+            monthly = monthly.sort_index().dropna()
+            monthly.name = ticker
+
+            pd.DataFrame(monthly).to_parquet(cp)
+            log.info("BAIXOU %s: %d obs (%s - %s)", ticker, len(monthly),
+                     monthly.index[0].date(), monthly.index[-1].date())
+            return monthly
+
         except Exception as e:
             if attempt < max_retries - 1:
                 wait = retry_delay * (2 ** attempt)
@@ -96,7 +106,8 @@ def fetch_monthly(
                             attempt + 1, max_retries, ticker, e, wait)
                 time.sleep(wait)
             else:
-                log.error("Falha definitiva para %s após %d tentativas: %s", ticker, max_retries, e)
+                log.error("Falha definitiva para %s após %d tentativas: %s",
+                          ticker, max_retries, e)
                 raise
 
 
@@ -113,7 +124,7 @@ def fetch_all(cfg: dict, cache_dir: Path, refresh: bool = False) -> dict[str, pd
             s = fetch_monthly(ticker, start=start, cache_dir=cache_dir,
                                max_age_days=cfg["cache"]["max_age_days"], refresh=refresh)
             results[name] = s
-            time.sleep(0.4)
+            time.sleep(0.3)
         except Exception as e:
             log.error("Falha %s: %s", name, e)
     return results

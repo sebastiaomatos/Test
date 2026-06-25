@@ -103,6 +103,26 @@ def fetch_monthly_series(
     return s
 
 
+def _get_series_last_date(series_id: int) -> datetime | None:
+    """
+    Descobre a última data disponível de uma série BCB.
+    Para séries descontinuadas, retorna a data do último ponto.
+    Endpoint correto: /dados/ultimos/{n} (no path, não query param).
+    """
+    url = f"{BCB_BASE.format(series_id=series_id)}/ultimos/1?formato=json"
+    try:
+        r = requests.get(url, timeout=15)
+        r.raise_for_status()
+        data = r.json()
+        if isinstance(data, list) and data:
+            last_date = datetime.strptime(data[-1]["data"], "%d/%m/%Y")
+            log.debug("BCB %d: última data = %s", series_id, last_date.strftime("%Y-%m-%d"))
+            return last_date
+    except Exception as e:
+        log.debug("BCB %d: não foi possível detectar última data: %s", series_id, e)
+    return None
+
+
 def fetch_imab_daily_to_monthly(
     series_id: int = 12466,
     start: str = "2015-01-01",
@@ -114,6 +134,7 @@ def fetch_imab_daily_to_monthly(
     """
     IMA-B: série de preço diário do BCB → retorno mensal (fim-de-mês vs fim-do-mês-anterior).
     O BCB limita a 10 anos para séries diárias; fazemos duas requisições se necessário.
+    A série 12466 foi descontinuada em mai/2023 — usamos a última data disponível como fim.
     """
     cache_dir.mkdir(parents=True, exist_ok=True)
     cp = _cache_path(cache_dir, series_id)
@@ -124,26 +145,36 @@ def fetch_imab_daily_to_monthly(
                  s.index[0].date(), s.index[-1].date())
         return s
 
-    if end is None:
-        end = datetime.today()
+    # Detecta última data disponível da série (pode ter sido descontinuada)
+    series_end = _get_series_last_date(series_id)
+    if series_end is None:
+        series_end = datetime.today()
     else:
-        end = datetime.strptime(end, "%Y-%m-%d")
+        log.info("BCB %d: última data disponível = %s", series_id, series_end.strftime("%Y-%m-%d"))
+
+    if end is not None:
+        requested_end = datetime.strptime(end, "%Y-%m-%d")
+        series_end = min(series_end, requested_end)
 
     start_dt = datetime.strptime(start, "%Y-%m-%d")
     # Limite BCB: janela de 10 anos para série diária
     limit = timedelta(days=365 * 10 - 1)
     chunks = []
     cur = start_dt
-    while cur < end:
-        chunk_end = min(cur + limit, end)
-        raw = _fetch_bcb_raw(
-            series_id,
-            cur.strftime("%d/%m/%Y"),
-            chunk_end.strftime("%d/%m/%Y"),
-        )
-        chunks.extend(raw)
+    while cur < series_end:
+        chunk_end = min(cur + limit, series_end)
+        try:
+            raw = _fetch_bcb_raw(
+                series_id,
+                cur.strftime("%d/%m/%Y"),
+                chunk_end.strftime("%d/%m/%Y"),
+            )
+            chunks.extend(raw)
+        except Exception as e:
+            log.warning("BCB %d: chunk %s-%s falhou: %s",
+                        series_id, cur.strftime("%d/%m/%Y"), chunk_end.strftime("%d/%m/%Y"), e)
         cur = chunk_end + timedelta(days=1)
-        if cur < end:
+        if cur < series_end:
             time.sleep(1)
 
     df = pd.DataFrame(chunks)
